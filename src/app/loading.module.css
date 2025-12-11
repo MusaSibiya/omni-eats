@@ -1,0 +1,78 @@
+.container {
+    min-height: 100vh;
+    padding: 6rem 1.5rem 3rem;
+    max-width: 80rem;
+    margin: 0 auto;
+}
+
+.heroSkeleton {
+    width: 100%;
+    height: 300px;
+    border-radius: 1.5rem;
+    background-color: var(--bg-secondary);
+    margin-bottom: 3rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 768px) {
+    .heroSkeleton {
+        height: 400px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.cardSkeleton {
+    height: 280px;
+    border-radius: 1rem;
+    background-color: var(--bg-secondary);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Animations */
+.shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) 50%,
+            transparent 100%);
+    animation: shimmer 2s infinite linear;
+    transform: skewX(-20deg);
+}
+
+[data-theme='light'] .shimmer {
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(0, 0, 0, 0.05) 50%,
+            transparent 100%);
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-150%) skewX(-20deg);
+    }
+
+    100% {
+        transform: translateX(150%) skewX(-20deg);
+    }
+}

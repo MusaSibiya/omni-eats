@@ -1,0 +1,134 @@
+/* Button.module.css */
+
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    border-radius: var(--radius-full);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    /* 15px */
+    letter-spacing: 0.02em;
+    transition: all var(--transition-normal);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    outline: none;
+    border: 1px solid transparent;
+}
+
+.button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Sizes */
+.sm {
+    height: 32px;
+    padding: 0 var(--spacing-md);
+    font-size: 0.8125rem;
+}
+
+.md {
+    height: 48px;
+    padding: 0 var(--spacing-xl);
+}
+
+.lg {
+    height: 56px;
+    padding: 0 var(--spacing-2xl);
+    font-size: 1.125rem;
+}
+
+.icon {
+    width: 48px;
+    padding: 0;
+}
+
+/* Variants */
+
+/* Primary: Gradient/Glow */
+.primary {
+    background: var(--color-primary);
+    color: var(--color-bg-main);
+    box-shadow: 0 4px 12px var(--color-primary-glow);
+    border-color: transparent;
+}
+
+.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px var(--color-primary-glow);
+    filter: brightness(1.1);
+}
+
+.primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary: Surface color */
+.secondary {
+    background: var(--color-bg-surface-hover);
+    color: var(--color-text-main);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.secondary:hover {
+    background: var(--color-bg-surface);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Outline: Transparent with border */
+.outline {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+}
+
+.outline:hover {
+    background: rgba(255, 174, 0, 0.1);
+    /* Primary with low opacity */
+}
+
+/* Ghost: Text only */
+.ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+}
+
+.ghost:hover {
+    color: var(--color-text-main);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+/* Loading State */
+.loading {
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    border-left-color: currentColor;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.primary .spinner {
+    border-color: rgba(0, 0, 0, 0.2);
+    border-left-color: var(--color-bg-main);
+}
+
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}

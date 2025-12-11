@@ -1,0 +1,59 @@
+/* Omni Eats Premium Design System - Theme Variables */
+
+:root {
+  /* Brand Colors - Obsidian & Neon Amber */
+  --color-primary: #FFAE00; /* Rich Amber/Gold */
+  --color-primary-glow: rgba(255, 174, 0, 0.4);
+  --color-secondary: #1E1E1E;
+  
+  /* Backgrounds */
+  --color-bg-main: #050505; /* Deepest Black */
+  --color-bg-surface: #121212; /* Surface card color */
+  --color-bg-surface-hover: #1A1A1A;
+  --color-bg-glass: rgba(18, 18, 18, 0.7);
+  
+  /* Typography Colors */
+  --color-text-main: #FFFFFF;
+  --color-text-muted: #A1A1A1;
+  --color-text-inverse: #000000;
+
+  /* Status Colors */
+  --color-success: #00E676;
+  --color-error: #FF1744;
+  --color-warning: #FFC400;
+
+  /* Spacing System */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--color-primary-glow);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+  
+  /* Fonts */
+  --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+}
+
+@media (prefers-color-scheme: light) {
+  /* We enforce dark mode for the premium feel, but here are fallbacks if needed later */
+  /* Currently strictly dark mode design */
+}
