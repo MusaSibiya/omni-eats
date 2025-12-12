@@ -18,15 +18,10 @@ export const Header = () => {
     const pathname = usePathname();
     const { cartCount } = useCart();
 
-    // Hide Header on Admin pages
-    if (pathname.startsWith('/admin')) {
-        return null;
-    }
-
-    // Re-validate session when the user navigates (e.g. after login/logout redirect)
+    // Re-validate session when the user navigates
     useEffect(() => {
         update();
-    }, [pathname]); // Only run on path change, NOT on status change
+    }, [pathname]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -36,6 +31,11 @@ export const Header = () => {
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
+
+    // Hide Header on Admin pages
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     return (
         <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
