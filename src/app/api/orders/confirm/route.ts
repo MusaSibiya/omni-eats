@@ -24,16 +24,19 @@ export async function POST(req: NextRequest) {
         const orderId = paymentIntent.metadata.orderId;
 
         if (!orderId) {
+            console.error('Confirm Error: No orderId in metadata', paymentIntent.id);
             return NextResponse.json({ error: 'No orderId in payment metadata' }, { status: 404 });
         }
 
         // 2. Check if order is already processed (Idempotency)
+        console.log('Searching for Order:', orderId);
         const existingOrder = await prisma.order.findUnique({
             where: { id: orderId },
             include: { payment: true }
         });
 
         if (!existingOrder) {
+            console.error('Confirm Error: Order not found in DB', orderId);
             return NextResponse.json({ error: 'Order not found' }, { status: 404 });
         }
 
