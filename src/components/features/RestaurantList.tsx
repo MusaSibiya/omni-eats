@@ -83,7 +83,7 @@ export const RestaurantList = ({ initialRestaurants }: RestaurantListProps) => {
                         <Link href={`/restaurants/${restaurant.id}`} key={restaurant.id} className={styles.card} style={{ textDecoration: 'none', color: 'inherit' }}>
                             <div className={styles.cardImageWrapper}>
                                 <Image
-                                    src={imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`}
+                                    src={imageSrc.startsWith('http') ? imageSrc : (imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`)}
                                     alt={restaurant.name}
                                     fill
                                     className={styles.cardImage}
