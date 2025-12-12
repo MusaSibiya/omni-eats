@@ -274,7 +274,7 @@ export default function HomePage({ featuredMeals }: HomePageProps) {
                             <div key={meal.id} className={styles.mealCard}>
                                 <div className={styles.mealImageWrapper}>
                                     <Image
-                                        src={meal.imageUrl || "/images/hero-salmon.png"}
+                                        src={meal.imageUrl?.startsWith('http') ? meal.imageUrl : (meal.imageUrl || "/images/hero-salmon.png")}
                                         alt={meal.name}
                                         width={400}
                                         height={400}
