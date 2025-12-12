@@ -1,9 +1,6 @@
-```javascript
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Forced restart for Prisma fix
-  /* config options here */
   images: {
     remotePatterns: [
       {
