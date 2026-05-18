@@ -14,11 +14,15 @@ export default async function OrderTrackingPage(props: { params: Promise<{ id: s
     const order = await prisma.order.findUnique({
         where: { id: params.id },
         include: {
-            restaurant: true,
             user: true,
+            driver: true,
             items: {
                 include: {
-                    menuItem: true
+                    menuItem: {
+                        include: {
+                            restaurant: true
+                        }
+                    }
                 }
             }
         }
@@ -28,9 +32,12 @@ export default async function OrderTrackingPage(props: { params: Promise<{ id: s
         redirect('/orders');
     }
 
+    // Sanitize order for client component (Prisma Decimal objects are not serializable)
+    const sanitizedOrder = JSON.parse(JSON.stringify(order));
+
     return (
         <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary)' }}>
-            <OrderTrackerClient order={order} />
+            <OrderTrackerClient order={sanitizedOrder} />
             <div style={{ marginTop: 'auto' }}>
                 <Footer />
             </div>

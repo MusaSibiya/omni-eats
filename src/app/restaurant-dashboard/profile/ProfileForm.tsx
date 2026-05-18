@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Cropper from 'react-easy-crop';
 import { updateRestaurantProfile } from '@/lib/dashboardActions';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import styles from '../../admin/admin.module.css';
 import registerStyles from '../../register-restaurant/page.module.css';
 import formStyles from '../dashboard-forms.module.css';
@@ -14,6 +15,8 @@ interface ProfileFormProps {
         description: string | null;
         cuisineType: string | null;
         deliveryTime: string | null;
+        deliveryAvailable: boolean;
+        address: string | null;
         imageUrl: string | null;
         profileChangeLog: string | null;
         rating: number;
@@ -39,7 +42,9 @@ export default function ProfileForm({ restaurant }: ProfileFormProps) {
         name: restaurant.name || '',
         description: restaurant.description || '',
         cuisineType: restaurant.cuisineType || '',
-        deliveryTime: restaurant.deliveryTime || ''
+        deliveryTime: restaurant.deliveryTime || '',
+        deliveryAvailable: restaurant.deliveryAvailable,
+        address: restaurant.address || ''
     });
 
     // Calculate changes remaining
@@ -216,6 +221,15 @@ export default function ProfileForm({ restaurant }: ProfileFormProps) {
                     />
                 </div>
 
+                <div className={formStyles.formGroup}>
+                    <label className={formStyles.formLabel}>Physical Address</label>
+                    <AddressAutocomplete
+                        value={formData.address}
+                        onChange={(val) => setFormData(prev => ({ ...prev, address: val }))}
+                        placeholder="e.g. 254 Fox Street, Johannesburg"
+                    />
+                </div>
+
                 <div className={formStyles.grid}>
                     <div className={formStyles.formGroup}>
                         <label className={formStyles.formLabel} style={{ opacity: 0.6, fontSize: '0.8rem' }}>Cuisine Style</label>
@@ -240,6 +254,22 @@ export default function ProfileForm({ restaurant }: ProfileFormProps) {
                             className={formStyles.input}
                         />
                     </div>
+                </div>
+
+                <div className={formStyles.formGroup} style={{ marginTop: '1rem' }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                        <input
+                            type="checkbox"
+                            name="deliveryAvailable"
+                            checked={formData.deliveryAvailable}
+                            onChange={(e) => setFormData(prev => ({ ...prev, deliveryAvailable: e.target.checked }))}
+                            style={{ width: '20px', height: '20px', cursor: 'pointer', accentColor: 'var(--accent-primary)' }}
+                        />
+                        <div>
+                            <span style={{ fontWeight: 600, color: 'white', display: 'block' }}>Enable Delivery Service</span>
+                            <span style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)' }}>Turn this off if you only want to offer self-collection/pickup.</span>
+                        </div>
+                    </label>
                 </div>
 
                 <button

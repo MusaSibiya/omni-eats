@@ -79,7 +79,12 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
                             <div key={order.id} className={styles.orderColumn}>
                                 <div className={styles.orderColumnHeader}>
                                     <span className={styles.orderColumnTitle}>#{order.id.slice(-4).toUpperCase()}</span>
-                                    <span className={styles.orderBadge} style={{ background: 'var(--bg-secondary)', color: 'var(--text-secondary)' }}>WAITING</span>
+                                    <span className={styles.orderBadge} style={{ 
+                                        background: order.status === 'READY' ? 'var(--accent-primary)' : 'var(--bg-secondary)', 
+                                        color: order.status === 'READY' ? 'white' : 'var(--text-secondary)' 
+                                    }}>
+                                        {order.status === 'READY' ? 'READY FOR PICKUP' : 'COOKING'}
+                                    </span>
                                 </div>
                                 <div className={styles.orderList}>
                                     <div className={styles.orderCard}>
@@ -123,18 +128,24 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
                                 </div>
                                 <div className={styles.orderList}>
                                     <div className={styles.orderCard}>
-                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '16px' }}>
-                                            <Store size={20} color="var(--text-secondary)" />
+                                        <div className={styles.orderLocationItem}>
+                                            <span className={styles.locationIcon}>🏬</span>
                                             <div>
-                                                <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '600' }}>Pickup</p>
-                                                <p style={{ margin: 0, fontWeight: '700', color: 'var(--text-primary)' }}>{order.items[0]?.menuItem.restaurant.name || 'Unknown'}</p>
+                                                <p className={styles.locationLabel}>Pickup</p>
+                                                <p className={styles.locationName}>{order.items?.[0]?.menuItem?.restaurant?.name || 'Restaurant'}</p>
+                                                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                                    {order.items?.[0]?.menuItem?.restaurant?.address || 'Address not provided'}
+                                                </p>
                                             </div>
                                         </div>
-                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                                            <MapPin size={20} color="var(--text-secondary)" />
+                                        <div className={styles.orderLocationItem}>
+                                            <span className={styles.locationIcon}>📍</span>
                                             <div>
-                                                <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '0.8rem', fontWeight: '600' }}>Dropoff</p>
-                                                <p style={{ margin: 0, fontWeight: '700', color: 'var(--text-primary)' }}>{order.user?.name || 'Guest Customer'}</p>
+                                                <p className={styles.locationLabel}>Dropoff</p>
+                                                <p className={styles.locationName}>{order.user?.name || 'Customer'}</p>
+                                                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                                                    {order.deliveryAddress || 'Address not provided'}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>

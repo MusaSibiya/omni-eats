@@ -5,6 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../../components/checkout/CheckoutForm';
 import { useCart } from '@/contexts/CartContext';
+import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,16 +19,30 @@ export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [restaurant, setRestaurant] = useState<any>(null);
+    const [deliveryAddress, setDeliveryAddress] = useState('');
     const { items, cartTotal } = useCart();
 
     useEffect(() => {
+        if (items.length > 0) {
+            fetch(`/api/restaurants/${items[0].restaurantId}`)
+                .then(res => res.json())
+                .then(data => setRestaurant(data))
+                .catch(err => console.error("Error fetching restaurant:", err));
+        }
+    }, [items]);
+
+    useEffect(() => {
         // Create PaymentIntent as soon as the page loads
-        // Only if there items
         if (items.length > 0) {
             fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items, amount: cartTotal }),
+                body: JSON.stringify({ 
+                    items, 
+                    amount: cartTotal,
+                    deliveryAddress
+                }),
             })
                 .then(async (res) => {
                     const data = await res.json();
@@ -79,6 +94,44 @@ export default function CheckoutPage() {
             <div className={styles.checkoutGrid}>
                 {/* Left Column: Order Summary */}
                 <div className={styles.summarySection}>
+                    <div style={{ 
+                        background: 'rgba(255, 107, 53, 0.05)', 
+                        padding: '1rem', 
+                        borderRadius: '12px', 
+                        border: '1px solid rgba(255, 107, 53, 0.1)',
+                        marginBottom: '2rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '12px'
+                    }}>
+                        <span style={{ fontSize: '1.5rem' }}>
+                            {restaurant?.deliveryAvailable ? '🛵' : '🛍️'}
+                        </span>
+                        <div>
+                            <p style={{ margin: 0, fontWeight: 'bold', color: 'var(--text-primary)' }}>
+                                {restaurant?.deliveryAvailable ? 'Delivery Order' : 'Self-Pickup Order'}
+                            </p>
+                            <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                {restaurant?.deliveryAvailable 
+                                    ? 'A driver will bring your order to you.' 
+                                    : 'Please collect your order at the restaurant.'}
+                            </p>
+                        </div>
+                    </div>
+
+                    {restaurant?.deliveryAvailable && (
+                        <div style={{ marginBottom: '2.5rem' }}>
+                            <h2 className={styles.sectionTitle}>Delivery Address</h2>
+                            <div style={{ marginTop: '0.5rem' }}>
+                                <AddressAutocomplete
+                                    value={deliveryAddress}
+                                    onChange={setDeliveryAddress}
+                                    placeholder="Start typing your street address..."
+                                />
+                            </div>
+                        </div>
+                    )}
+
                     <h2 className={styles.sectionTitle}>Order Summary</h2>
                     <div className={styles.itemsList}>
                         {items.map((item) => (

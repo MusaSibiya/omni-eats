@@ -58,6 +58,8 @@ export default async function OrdersPage() {
 
     const pending = orders.filter((o: any) => o.status === 'PENDING');
     const cooking = orders.filter((o: any) => o.status === 'COOKING');
+    const ready = orders.filter((o: any) => o.status === 'READY');
+    const outForDelivery = orders.filter((o: any) => o.status === 'OUT_FOR_DELIVERY');
     const delivered = orders.filter((o: any) => o.status === 'DELIVERED');
 
     return (
@@ -77,7 +79,8 @@ export default async function OrdersPage() {
             <div className={styles.orderGrid}>
                 <DashboardOrderColumn title="Pending" orders={pending} />
                 <DashboardOrderColumn title="Cooking" orders={cooking} />
-                <DashboardOrderColumn title="Delivered" orders={delivered} />
+                <DashboardOrderColumn title="Ready" orders={ready} />
+                <DashboardOrderColumn title="Delivered" orders={[...outForDelivery, ...delivered]} />
             </div>
         </div>
     );
@@ -95,7 +98,21 @@ function DashboardOrderColumn({ title, orders }: { title: string, orders: any[] 
                 {orders.map(order => (
                     <div key={order.id} className={styles.orderCard}>
                         <div className={styles.orderHeader}>
-                            <span className={styles.orderId}>#{order.id.slice(-4).toUpperCase()}</span>
+                            <div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <span className={styles.orderId}>#{order.id.slice(-4).toUpperCase()}</span>
+                                <span style={{ 
+                                    fontSize: '0.7rem', 
+                                    fontWeight: 'bold', 
+                                    color: order.deliveryType === 'PICKUP' ? '#38b2ac' : 'var(--accent-primary)',
+                                    background: order.deliveryType === 'PICKUP' ? 'rgba(56, 178, 172, 0.1)' : 'rgba(255, 107, 53, 0.1)',
+                                    padding: '2px 6px',
+                                    borderRadius: '4px',
+                                    marginTop: '4px',
+                                    width: 'fit-content'
+                                }}>
+                                    {order.deliveryType === 'PICKUP' ? '🛍️ PICKUP' : '🛵 DELIVERY'}
+                                </span>
+                            </div>
                             <span className={styles.orderTotal}>R{Number(order.total).toFixed(2)}</span>
                         </div>
                         <p className={styles.orderItems}>
@@ -105,7 +122,7 @@ function DashboardOrderColumn({ title, orders }: { title: string, orders: any[] 
                             <span className={styles.orderTime}>
                                 {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </span>
-                            <DashboardStatusButtons orderId={order.id} currentStatus={order.status} />
+                            <DashboardStatusButtons orderId={order.id} currentStatus={order.status} deliveryType={order.deliveryType} />
                         </div>
                     </div>
                 ))}
@@ -121,7 +138,7 @@ function DashboardOrderColumn({ title, orders }: { title: string, orders: any[] 
 
 import { updateDashboardOrderStatus } from '@/lib/dashboardActions';
 
-function DashboardStatusButtons({ orderId, currentStatus }: { orderId: string, currentStatus: string }) {
+function DashboardStatusButtons({ orderId, currentStatus, deliveryType }: { orderId: string, currentStatus: string, deliveryType: string }) {
     return (
         <form action={async (formData) => {
             'use server';
@@ -134,12 +151,26 @@ function DashboardStatusButtons({ orderId, currentStatus }: { orderId: string, c
                 </button>
             )}
             {currentStatus === 'COOKING' && (
-                <button name="status" value="DELIVERED" className={`${styles.statusBtn} ${styles.delivered}`}>
-                    Deliver
+                <button name="status" value="READY" className={`${styles.statusBtn} ${styles.ready || styles.delivered}`}>
+                    {deliveryType === 'PICKUP' ? 'Ready for Pickup' : 'Mark as Ready'}
                 </button>
             )}
+            {currentStatus === 'READY' && (
+                <>
+                    {deliveryType === 'PICKUP' ? (
+                        <button name="status" value="DELIVERED" className={`${styles.statusBtn} ${styles.delivered}`}>
+                            Mark as Collected
+                        </button>
+                    ) : (
+                        <span className={styles.statusCompleted}>Waiting for Driver</span>
+                    )}
+                </>
+            )}
+            {currentStatus === 'OUT_FOR_DELIVERY' && (
+                <span className={styles.statusCompleted}>Out for Delivery</span>
+            )}
             {currentStatus === 'DELIVERED' && (
-                <span className={styles.statusCompleted}>✓ Completed</span>
+                <span className={styles.statusCompleted}>✓ Delivered</span>
             )}
         </form>
     );

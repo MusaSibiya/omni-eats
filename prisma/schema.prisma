@@ -37,6 +37,8 @@ model Restaurant {
   ownerId          String?
   status           String     @default("PENDING")
   isOpen           Boolean    @default(true)
+  deliveryAvailable Boolean   @default(true)
+  address          String?
   createdAt        DateTime   @default(now())
   updatedAt        DateTime   @updatedAt
   deletedAt        DateTime?
@@ -66,11 +68,13 @@ model Order {
   userId        String
   driverId      String?
   status        String      @default("PENDING")
+  deliveryType  String      @default("DELIVERY")
   total         Decimal
   paymentStatus String      @default("PENDING")
   promoCode     String?
   discount      Decimal?    @default(0)
   addressId     String?
+  deliveryAddress String?
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   user          User        @relation("UserOrders", fields: [userId], references: [id])

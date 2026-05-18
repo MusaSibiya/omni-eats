@@ -16,10 +16,11 @@ export default async function DriverDashboardPage() {
         redirect('/');
     }
 
-    // Fetch orders that are COOKING (ready to be picked up) and not assigned
+    // Fetch orders that are COOKING or READY, not assigned, AND are DELIVERY type
     const availableOrders = await prisma.order.findMany({
         where: {
             status: { in: ['COOKING', 'READY'] },
+            deliveryType: 'DELIVERY',
             driverId: null
         },
         include: {

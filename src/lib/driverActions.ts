@@ -55,50 +55,60 @@ export async function applyToBeDriver(formData: FormData) {
 }
 
 export async function acceptDelivery(orderId: string) {
-    const session = await auth();
-    if (!session?.user?.id) throw new Error('Not authenticated');
+    try {
+        const session = await auth();
+        if (!session?.user?.id) throw new Error('Not authenticated');
 
-    // Make sure user is a DRIVER (or allow for demo purposes)
-    const user = await prisma.user.findUnique({ where: { id: session.user.id } });
-    if (user?.role !== 'DRIVER') {
-        // For testing purposes, we can optionally auto-upgrade them or just allow it if we want it to be easy to test.
-        // Let's enforce it but provide a test script to make someone a driver.
-        throw new Error('Not authorized as driver');
-    }
-
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) throw new Error('Order not found');
-    if (order.driverId) throw new Error('Order already claimed');
-
-    await prisma.order.update({
-        where: { id: orderId },
-        data: {
-            status: 'OUT_FOR_DELIVERY',
-            driverId: session.user.id,
+        // Make sure user is a DRIVER
+        const user = await prisma.user.findUnique({ where: { id: session.user.id } });
+        if (user?.role !== 'DRIVER') {
+            throw new Error('Not authorized as driver');
         }
-    });
 
-    revalidatePath('/driver-dashboard');
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath('/admin/orders');
+        const order = await prisma.order.findUnique({ where: { id: orderId } });
+        if (!order) throw new Error('Order not found');
+        if (order.driverId) throw new Error('Order already claimed');
+
+        await prisma.order.update({
+            where: { id: orderId },
+            data: {
+                status: 'OUT_FOR_DELIVERY',
+                driverId: session.user.id,
+            }
+        });
+
+        revalidatePath('/driver-dashboard');
+        revalidatePath(`/orders/${orderId}`);
+        revalidatePath('/admin/orders');
+        return { success: true };
+    } catch (error: any) {
+        console.error("Accept Delivery Error:", error);
+        throw new Error(error.message || "Failed to accept delivery");
+    }
 }
 
 export async function completeDelivery(orderId: string) {
-    const session = await auth();
-    if (!session?.user?.id) throw new Error('Not authenticated');
+    try {
+        const session = await auth();
+        if (!session?.user?.id) throw new Error('Not authenticated');
 
-    const order = await prisma.order.findUnique({ where: { id: orderId } });
-    if (!order) throw new Error('Order not found');
-    if (order.driverId !== session.user.id) throw new Error('Not your delivery');
+        const order = await prisma.order.findUnique({ where: { id: orderId } });
+        if (!order) throw new Error('Order not found');
+        if (order.driverId !== session.user.id) throw new Error('Not your delivery');
 
-    await prisma.order.update({
-        where: { id: orderId },
-        data: {
-            status: 'DELIVERED',
-        }
-    });
+        await prisma.order.update({
+            where: { id: orderId },
+            data: {
+                status: 'DELIVERED',
+            }
+        });
 
-    revalidatePath('/driver-dashboard');
-    revalidatePath(`/orders/${orderId}`);
-    revalidatePath('/admin/orders');
+        revalidatePath('/driver-dashboard');
+        revalidatePath(`/orders/${orderId}`);
+        revalidatePath('/admin/orders');
+        return { success: true };
+    } catch (error: any) {
+        console.error("Complete Delivery Error:", error);
+        throw new Error(error.message || "Failed to complete delivery");
+    }
 }

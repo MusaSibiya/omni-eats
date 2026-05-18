@@ -56,6 +56,8 @@ export async function updateRestaurantProfile(restaurantId: string, formData: Fo
     const description = formData.get('description') as string;
     const cuisineType = formData.get('cuisineType') as string;
     const deliveryTime = formData.get('deliveryTime') as string;
+    const address = formData.get('address') as string;
+    const deliveryAvailable = formData.get('deliveryAvailable') === 'true' || formData.get('deliveryAvailable') === 'on';
     const imageFile = formData.get('image') as File;
 
     let imageUrl = restaurant.imageUrl;
@@ -80,6 +82,8 @@ export async function updateRestaurantProfile(restaurantId: string, formData: Fo
             description,
             cuisineType,
             deliveryTime,
+            deliveryAvailable,
+            address,
             imageUrl,
             profileChangeLog: JSON.stringify(recentChanges)
         }

@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }
 
-        const { items, amount } = await req.json();
-        console.log("DEBUG: Payment Intent Body:", { itemsCount: items?.length, amount });
+        const { items, amount, deliveryAddress } = await req.json();
+        console.log("DEBUG: Payment Intent Body:", { itemsCount: items?.length, amount, deliveryAddress });
 
         if (!items || items.length === 0) {
             console.log("DEBUG: Error: No items in cart");
@@ -57,6 +57,15 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Order total must be at least R10.00 to process payment.' }, { status: 400 });
         }
 
+        // 0.5. Determine Delivery Type based on Restaurant setting
+        const restaurantId = items[0].restaurantId;
+        const restaurant = await prisma.restaurant.findUnique({
+            where: { id: restaurantId },
+            select: { deliveryAvailable: true }
+        });
+
+        const deliveryType = restaurant?.deliveryAvailable ? 'DELIVERY' : 'PICKUP';
+
         // 1. Create the Order in PENDING state
         console.log("Creating order in Prisma...");
         const order = await prisma.order.create({
@@ -65,6 +74,8 @@ export async function POST(req: NextRequest) {
                 total: amount,
                 status: 'PENDING',
                 paymentStatus: 'PENDING',
+                deliveryType: deliveryType,
+                deliveryAddress: deliveryAddress || null,
                 items: {
                     create: items.map((item: any) => ({
                         menuItemId: item.id,
