@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cmk6lk9g6000cv2r8no6lqjqm",
+    "name": "Durban Curry House",
+    "cuisine": "Indian / Durban",
+    "menuCount": 4
+  },
+  {
+    "id": "cmk6m1n6m0001v2ycq5ma6wgv",
+    "name": "The Manchester Bistro",
+    "cuisine": "French/International",
+    "menuCount": 3
+  },
+  {
+    "id": "cmkglqhjq0008v2uwv416sli1",
+    "name": "Soweto Grill & Bar",
+    "cuisine": "South African Grill",
+    "menuCount": 3
+  },
+  {
+    "id": "cmlhs0rgg000yv2wob883os5a",
+    "name": "Manchester Royal Dining",
+    "cuisine": "Contemporary British",
+    "menuCount": 3
+  }
+]

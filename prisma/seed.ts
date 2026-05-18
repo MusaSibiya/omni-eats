@@ -48,7 +48,7 @@ async function main() {
 
     await prisma.menuItem.createMany({
         data: [
-            { restaurantId: restaurant1.id, name: 'Full House Kota', description: 'Bread, polony, russian, cheese, egg, atchar, chips.', price: 45.00, category: 'Main', imageUrl: 'https://images.unsplash.com/photo-1563245372-f217273229b4?auto=format&fit=crop&w=800&q=80' },
+            { restaurantId: restaurant1.id, name: 'Full House Kota', description: 'Bread, polony, russian, cheese, egg, atchar, chips.', price: 45.00, category: 'Main', imageUrl: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=800&q=80' },
             { restaurantId: restaurant1.id, name: 'Mogodu & Pap', description: 'Slow cooked tripe served with creamy pap.', price: 65.00, category: 'Main' },
             { restaurantId: restaurant1.id, name: 'Hardbody Chicken', description: 'Traditional hardbody chicken stew with dumplings.', price: 85.00, category: 'Main' },
             { restaurantId: restaurant1.id, name: 'Chakalaka', description: 'Spicy vegetable relish.', price: 15.00, category: 'Sides' },

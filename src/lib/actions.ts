@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 import { signIn, signOut, auth } from '@/auth';
 import { redirect } from 'next/navigation';
-
+import { revalidatePath } from 'next/cache';
 export async function authenticate(
     prevState: string | undefined,
     formData: FormData,
@@ -16,31 +16,46 @@ export async function authenticate(
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
-        console.log('🔐 Authentication attempt:', { email, passwordLength: password?.length });
-
         const user = await prisma.user.findUnique({ where: { email } });
-        console.log('👤 User found:', user ? `Yes (${user.role})` : 'No');
 
-        const redirectTo = user?.role === 'ADMIN' ? '/admin' : '/';
-        console.log('🔄 Redirect target:', redirectTo);
-
-        await signIn('credentials', {
-            email,
-            password,
-            redirectTo,
-            redirect: true
-        });
-    } catch (error) {
-        console.error('❌ Authentication error:', error);
-        if (error instanceof AuthError) {
-            switch (error.type) {
-                case 'CredentialsSignin':
-                    return 'Invalid credentials.';
-                default:
-                    return 'Something went wrong.';
-            }
+        // Determine redirect based on role
+        let redirectTo = '/';
+        if (user?.role === 'ADMIN') {
+            redirectTo = '/admin';
+        } else if (user?.role === 'RESTAURANT_OWNER') {
+            redirectTo = '/restaurant-dashboard';
+        } else if (user?.role === 'DRIVER') {
+            redirectTo = '/driver-dashboard';
         }
-        throw error;
+
+        try {
+            await signIn('credentials', {
+                email,
+                password,
+                redirect: false
+            });
+        } catch (error) {
+            if (error instanceof AuthError) {
+                switch (error.type) {
+                    case 'CredentialsSignin':
+                        return 'Invalid credentials.';
+                    default:
+                        return 'Something went wrong.';
+                }
+            }
+            throw error;
+        }
+
+        // Force cache revalidation and redirect
+        revalidatePath('/', 'layout');
+        redirect(redirectTo);
+
+    } catch (error) {
+        if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+            throw error;
+        }
+        console.error('❌ Authentication error:', error);
+        return 'Something went wrong.';
     }
 }
 
@@ -48,11 +63,21 @@ export async function register(
     prevState: string | undefined,
     formData: FormData,
 ) {
-    const { name, email, password } = Object.fromEntries(formData);
+    const { name, email, password, confirmPassword } = Object.fromEntries(formData);
 
     // Basic validation
     if (!name || !email || !password || typeof password !== 'string' || password.length < 6) {
         return 'Please provide a valid name, email, and password (min 6 chars).';
+    }
+
+    if (password !== confirmPassword) {
+        return 'Passwords do not match.';
+    }
+
+    // Email format validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email as string)) {
+        return 'Please provide a valid email address.';
     }
 
     try {
@@ -68,16 +93,35 @@ export async function register(
             data: userData,
         });
 
+        // Auto-login after registration
+        try {
+            await signIn('credentials', {
+                email: email as string,
+                password: password as string,
+                redirect: false
+            });
+        } catch (error) {
+            console.error('Auto-login failed after registration:', error);
+            // Even if auto-login fails, account was created. Redirect to login.
+            redirect('/login?registered=true');
+        }
+
+        // Force cache revalidation and redirect
+        revalidatePath('/', 'layout');
+        redirect('/');
+
     } catch (error) {
+        // Re-throw redirect errors so Next.js can handle them
+        if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+            throw error;
+        }
         console.error('Registration failed:', error);
         return 'Registration failed. User may already exist.';
     }
-
-    // Redirect to login with success flag
-    redirect('/login?registered=true');
 }
 
 export async function handleSignOut() {
+    revalidatePath('/', 'layout');
     await signOut({ redirectTo: '/' });
 }
 

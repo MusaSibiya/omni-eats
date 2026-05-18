@@ -20,11 +20,8 @@ async function getUser(email: string) {
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
     ...authConfig,
-    session: {
-        strategy: 'jwt',
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-    },
-    secret: process.env.AUTH_SECRET || 'fallback-secret-key-change-in-production',
+    secret: process.env.AUTH_SECRET,
+    trustHost: true,
     providers: [
         Credentials({
             async authorize(credentials) {

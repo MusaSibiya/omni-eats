@@ -15,6 +15,14 @@
     -webkit-backdrop-filter: blur(12px);
 }
 
+.burgerBtn {
+    display: none;
+}
+
+.mobileNav {
+    display: none;
+}
+
 .scrolled {
     box-shadow: var(--shadow-md);
 }
@@ -29,6 +37,12 @@
     justify-content: space-between;
 }
 
+@media (max-width: 768px) {
+    .container {
+        padding: 0 20px;
+    }
+}
+
 .logo {
     font-size: 1.5rem;
     font-weight: 800;
@@ -37,6 +51,13 @@
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.25rem;
+        gap: 4px;
+    }
 }
 
 .logo span {
@@ -107,6 +128,12 @@
     color: var(--accent-primary);
 }
 
+@media (max-width: 480px) {
+    .actions {
+        gap: 8px;
+    }
+}
+
 .badge {
     position: absolute;
     top: 4px;
@@ -135,6 +162,13 @@
     font-size: 0.875rem;
     font-weight: 500;
     color: var(--text-primary);
+}
+
+@media (max-width: 480px) {
+    .userName {
+        display: none;
+        /* Hide name on very small screens to save space */
+    }
 }
 
 .signOutBtn {
@@ -168,5 +202,164 @@
 @media (max-width: 768px) {
     .nav {
         display: none;
+    }
+
+    .authSection {
+        display: flex;
+        align-items: center;
+    }
+
+    .signInLink {
+        font-size: 0.8125rem;
+        background: var(--bg-secondary);
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+    }
+
+    .burgerBtn {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        width: 40px;
+        height: 40px;
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        cursor: pointer;
+        padding: 0;
+        z-index: 101;
+        transition: all 0.2s ease;
+    }
+
+    .burgerBtn:hover {
+        background: var(--bg-tertiary);
+    }
+
+    .burgerLine {
+        width: 22px;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+    }
+
+    .burgerLine.open:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .burgerLine.open:nth-child(2) {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    .burgerLine.open:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .mobileNav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: var(--bg-primary);
+        z-index: 100;
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .mobileNav.active {
+        transform: translateX(0);
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .mobileNavContainer {
+        height: 100%;
+        padding: 100px 24px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobileNavContent {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .mobileNavContent .link {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .mobileAuth {
+        margin-top: auto;
+        padding-top: 32px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .mobileSignInBtn {
+        padding: 18px;
+        background: var(--accent-primary);
+        color: white;
+        text-align: center;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 1.125rem;
+        box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+    }
+
+    .mobileSignOutBtn {
+        padding: 16px;
+        background: transparent;
+        border: 2px solid var(--border-color);
+        color: var(--text-primary);
+        text-align: center;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+}
+
+.loadingPulse {
+    width: 80px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.loadingPulse::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.1),
+            transparent);
+    animation: loadingPulse 1.5s infinite;
+}
+
+@keyframes loadingPulse {
+    100% {
+        transform: translateX(100%);
     }
 }

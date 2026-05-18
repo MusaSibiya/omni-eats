@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { register } from '@/lib/actions';
 import { Button } from '@/components/ui/Button';
+import { BackButton } from '@/components/ui/BackButton';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -37,6 +38,14 @@ export default function RegisterPage() {
 
     return (
         <main className={styles.container}>
+            {/* Restaurant Registration Link - Top Right */}
+            <div className={styles.restaurantLinkTop}>
+                <p>Are you a restaurant owner?</p>
+                <Link href="/register-restaurant" className={styles.restaurantButton}>
+                    🍽️ Register Your Restaurant
+                </Link>
+            </div>
+
             {/* Background Decorative Elements */}
             <div className={styles.decorWrapper}>
                 <div className={styles.decorItem} data-item="burger">
@@ -67,11 +76,10 @@ export default function RegisterPage() {
             </div>
 
             <div className={styles.card}>
-                {/* Left Side - Register Form */}
                 <div className={styles.formSection}>
                     <div className={styles.mobileLogo}>
                         <div className={styles.logo}>
-                            OMNI <span>EATS</span>
+                            SOTOBE <span>MEALS</span>
                         </div>
                     </div>
 
@@ -119,6 +127,20 @@ export default function RegisterPage() {
                                 minLength={6}
                             />
                         </div>
+                        <div className={styles.inputGroup}>
+                            <label className={styles.label} htmlFor="confirmPassword">
+                                Confirm Password
+                            </label>
+                            <input
+                                className={styles.input}
+                                id="confirmPassword"
+                                type="password"
+                                name="confirmPassword"
+                                placeholder="••••••••"
+                                required
+                                minLength={6}
+                            />
+                        </div>
 
                         <Button
                             className={styles.submitButton}
@@ -147,7 +169,7 @@ export default function RegisterPage() {
                 <div className={styles.brandingSection}>
                     <div className={styles.brandingContent}>
                         <div className={styles.brandingLogo}>
-                            OMNI <span>EATS</span>
+                            SOTOBE <span>EATS</span>
                         </div>
 
                         <div className={styles.carouselContainer}>

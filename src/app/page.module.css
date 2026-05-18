@@ -469,3 +469,132 @@
   text-align: center;
   margin-top: 60px;
 }
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .heroTitle {
+    font-size: 3.5rem;
+  }
+
+  .heroContainer {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+
+  .heroContent {
+    padding-right: 0;
+  }
+
+  .heroSubtitle {
+    margin: 0 auto 40px;
+  }
+
+  .heroButtons {
+    justify-content: center;
+  }
+
+  .heroImage {
+    order: -1;
+  }
+
+  .foodImage {
+    margin-right: 0;
+    width: 60%;
+  }
+
+  .discoveryCopyright {
+    left: 50%;
+    transform: translateX(-50%);
+    top: 20px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .whyGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stepsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mealsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 0 40px;
+  }
+
+  .heroTitle {
+    font-size: 2.5rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 24px;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    padding: 12px 30px;
+    font-size: 0.9rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.75rem;
+    margin-bottom: 40px;
+  }
+
+  .whyGrid,
+  .stepsGrid,
+  .mealsGrid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 0 20px;
+  }
+
+  .cornerPlate {
+    width: 200px;
+    height: 200px;
+    top: -40px;
+    right: -40px;
+  }
+
+  .discoveryCopyright {
+    font-size: 0.6rem;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroContainer {
+    padding: 0 20px;
+  }
+
+  .heroButtons {
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+  }
+
+  .foodImage {
+    width: 80%;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+}

@@ -61,7 +61,16 @@ export async function updateRestaurant(restaurantId: string, formData: FormData)
 
 export async function deleteRestaurant(id: string) {
     await checkAdmin();
-    await prisma.restaurant.delete({ where: { id } });
+
+    // Perform a soft delete by setting deletedAt
+    await prisma.restaurant.update({
+        where: { id },
+        data: {
+            deletedAt: new Date(),
+            isOpen: false
+        }
+    });
+
     revalidatePath('/admin/restaurants');
 }
 

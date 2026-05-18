@@ -539,8 +539,27 @@
 }
 
 @media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+        margin-bottom: 12px;
+    }
+
+    .meta {
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: 0.95rem;
+    }
+
+    .categoryTitle {
+        font-size: 1.5rem;
+        margin-bottom: 24px;
+    }
+}
+
+@media (max-width: 768px) {
     .hero {
         height: 40vh;
+        min-height: 300px;
     }
 
     .menuContainer {
@@ -553,5 +572,19 @@
 
     .itemsGrid {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 420px) {
+    .itemsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .reviewCard {
+        padding: 16px;
+    }
+
+    .reviewerName {
+        font-size: 0.875rem;
     }
 }

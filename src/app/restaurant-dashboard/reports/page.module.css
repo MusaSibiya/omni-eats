@@ -1,0 +1,265 @@
+.reportsContainer {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    color: var(--text-primary);
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.title {
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #fff 0%, #a0a5b1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    color: var(--text-secondary, #9ca3af);
+    font-size: 1rem;
+}
+
+.exportBtn {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-primary, #FF6B35) 0%, #E85D2A 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+.exportBtn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+}
+
+.bestsellerGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.glassCard {
+    background: var(--surface-primary, rgba(255,255,255,0.02));
+    border: 1px solid var(--border-color, rgba(255,255,255,0.05));
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.cardTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.itemRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.05));
+    transition: background-color 0.2s;
+}
+
+.itemRow:last-child {
+    border-bottom: none;
+}
+
+.itemRow:hover {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 0 -1rem;
+}
+
+.itemNameInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rankBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
+
+.rank1 { background: linear-gradient(135deg, #FFD700, #FDB931); color: #000; }
+.rank2 { background: linear-gradient(135deg, #C0C0C0, #E0E0E0); color: #000; }
+.rank3 { background: linear-gradient(135deg, #CD7F32, #E69D5B); color: #000; }
+
+.itemName {
+    font-weight: 600;
+    font-size: 1.05rem;
+}
+
+.itemCategory {
+    font-size: 0.8rem;
+    color: var(--text-secondary, #9ca3af);
+    background: rgba(255,255,255,0.05);
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    margin-top: 0.25rem;
+    display: inline-block;
+}
+
+.itemStats {
+    text-align: right;
+}
+
+.itemRevenue {
+    font-weight: 700;
+    color: var(--accent-secondary, #4ECDC4);
+    font-size: 1.1rem;
+}
+
+.itemCount {
+    font-size: 0.85rem;
+    color: var(--text-secondary, #9ca3af);
+}
+
+.insightsPanel {
+    background: linear-gradient(135deg, rgba(26, 29, 35, 0.8) 0%, rgba(15, 17, 21, 0.9) 100%);
+    border: 1px solid rgba(78, 205, 196, 0.2);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.insightsPanel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.insightStat {
+    flex: 1;
+    min-width: 200px;
+}
+
+.insightLabel {
+    font-size: 0.9rem;
+    color: var(--text-secondary, #9ca3af);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+}
+
+.insightValue {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
+.insightTrend {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.positiveTrend { color: #10b981; }
+.negativeTrend { color: #ef4444; }
+
+.chartSection {
+    background: var(--surface-primary, rgba(255,255,255,0.02));
+    border: 1px solid var(--border-color, rgba(255,255,255,0.05));
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.barChart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2%;
+    height: 250px;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.05));
+}
+
+.barCol {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    height: 100%;
+}
+
+.barFill {
+    width: 60%;
+    background: linear-gradient(to top, rgba(255, 107, 53, 0.2), rgba(255, 107, 53, 0.8));
+    border-radius: 6px 6px 0 0;
+    min-height: 5%;
+    transition: height 1s ease-out;
+    position: relative;
+}
+
+.barFill:hover {
+    background: linear-gradient(to top, rgba(78, 205, 196, 0.2), rgba(78, 205, 196, 0.8));
+    cursor: pointer;
+}
+
+.barFill:hover::before {
+    content: attr(data-value);
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: var(--bg-primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.barLabel {
+    position: absolute;
+    bottom: -25px;
+    font-size: 0.8rem;
+    color: var(--text-secondary, #9ca3af);
+    white-space: nowrap;
+}

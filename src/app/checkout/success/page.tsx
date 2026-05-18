@@ -11,35 +11,67 @@ export default function CheckoutSuccessPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [status, setStatus] = useState('loading'); // loading, success, error
+    const [errorDetails, setErrorDetails] = useState<string | null>(null);
     const [orderId, setOrderId] = useState<string | null>(null);
 
     useEffect(() => {
         const paymentIntentId = searchParams.get('payment_intent');
         const urlOrderId = searchParams.get('orderId');
 
+        console.log('Success page loaded with params:', { paymentIntentId, urlOrderId });
+
         if (urlOrderId) setOrderId(urlOrderId);
 
         if (paymentIntentId) {
             // Confirm the order on the backend
+            console.log('Calling /api/orders/confirm with:', { paymentIntentId });
+
             fetch('/api/orders/confirm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ paymentIntentId }),
             })
-                .then(res => {
+                .then(async res => {
+                    console.log('Raw response status:', res.status);
+                    console.log('Raw response ok:', res.ok);
+                    console.log('Raw response headers:', Object.fromEntries(res.headers.entries()));
+
+                    const text = await res.text();
+                    console.log('Raw response text:', text);
+
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (e) {
+                        console.error('Failed to parse JSON:', e);
+                        data = { error: 'Invalid JSON response', rawText: text };
+                    }
+
+                    console.log('Confirm API Response:', { status: res.status, data });
+
                     if (res.ok) {
                         setStatus('success');
                         clearCart();
+                        // Update orderId if returned from API
+                        if (data.order?.id) {
+                            setOrderId(data.order.id);
+                        }
                     } else {
+                        console.error('Confirm API Error:', data);
+                        setErrorDetails(data.error || 'Unknown error');
                         setStatus('error');
                     }
                 })
-                .catch(() => setStatus('error'));
+                .catch(err => {
+                    console.error('Confirm API Network Error:', err);
+                    setStatus('error');
+                });
         } else {
-            // If no payment intent, maybe just visiting? redirect?
-            // For now, let's just stay or redrect home
+            // If no payment intent, redirect home
+            console.warn('No payment_intent in URL, redirecting...');
+            router.push('/');
         }
-    }, [searchParams, clearCart]);
+    }, [searchParams, clearCart, router]);
 
     return (
         <div className={styles.pageWrapper}>
@@ -61,7 +93,7 @@ export default function CheckoutSuccessPage() {
                     <>
                         <h1>Order Confirmed!</h1>
                         <p>Thank you for your order. We're firing up the ovens!</p>
-                        {orderId && <p className={styles.orderId}>Order #{orderId.slice(-6).toUpperCase()}</p>}
+                        {orderId && <p className={styles.orderId}>Order #{orderId.slice(-4).toUpperCase()}</p>}
                     </>
                 )}
 
@@ -69,7 +101,8 @@ export default function CheckoutSuccessPage() {
                     <>
                         <h1>Something went wrong</h1>
                         <p>We received your payment but couldn't finalize the order details. Please contact support.</p>
-                        {orderId && <p className={styles.orderId}>Reference: {orderId}</p>}
+                        {errorDetails && <p style={{ color: 'red', marginTop: '1rem', fontSize: '0.9rem', background: 'rgba(255,0,0,0.1)', padding: '0.5rem', borderRadius: '4px' }}><strong>Error Details:</strong> {errorDetails}</p>}
+                        {orderId && <p className={styles.orderId} style={{ marginTop: '1rem' }}>Reference: {orderId.slice(-4).toUpperCase()}</p>}
                     </>
                 )}
 
@@ -77,7 +110,7 @@ export default function CheckoutSuccessPage() {
                     <Link href="/">
                         <button className={styles.btnPrimary}>Back to Home</button>
                     </Link>
-                    <Link href="/profile">
+                    <Link href="/orders">
                         <button className={styles.btnSecondary}>View Order History</button>
                     </Link>
                 </div>

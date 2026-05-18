@@ -17,6 +17,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
+    const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const { items, cartTotal } = useCart();
 
     useEffect(() => {
@@ -28,10 +29,21 @@ export default function CheckoutPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ items, amount: cartTotal }),
             })
-                .then((res) => res.json())
+                .then(async (res) => {
+                    const data = await res.json();
+                    if (!res.ok) {
+                        throw new Error(data.error || 'Failed to initialize checkout');
+                    }
+                    return data;
+                })
                 .then((data) => {
                     setClientSecret(data.clientSecret);
                     setOrderId(data.orderId);
+                    setErrorMsg(null);
+                })
+                .catch((err) => {
+                    console.error("Payment intent error:", err);
+                    setErrorMsg(err.message);
                 });
         }
     }, [items, cartTotal]);
@@ -97,7 +109,18 @@ export default function CheckoutPage() {
                 {/* Right Column: Payment Form */}
                 <div className={styles.paymentSection}>
                     <h2 className={styles.sectionTitle}>Payment Details</h2>
-                    {clientSecret ? (
+                    {errorMsg ? (
+                        <div className={styles.paymentError}>
+                            <p><strong>Error:</strong> {errorMsg}</p>
+                            <button 
+                                className={styles.btnPrimary} 
+                                onClick={() => window.location.reload()}
+                                style={{ marginTop: '1rem' }}
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    ) : clientSecret ? (
                         <Elements options={options} stripe={stripePromise}>
                             <CheckoutForm orderId={orderId} />
                         </Elements>

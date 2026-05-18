@@ -36,18 +36,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <AuthProvider>
+        <AuthProvider session={session}>
           <CartProvider>
             <ThemeProvider>
-              <Header />
+              <Header session={session} key={session?.user?.email || 'guest'} />
               {children}
             </ThemeProvider>
           </CartProvider>

@@ -1,0 +1,161 @@
+/* Dashboard Shared Form Styles */
+
+.formContainer {
+    margin-top: 2rem;
+    padding: 2.5rem;
+    background: var(--surface-primary, rgba(255, 255, 255, 0.02));
+    border-radius: 16px;
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+    max-width: 800px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px var(--shadow-color, rgba(0,0,0,0.1));
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.formLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.8));
+    display: flex;
+    justify-content: space-between;
+}
+
+.input,
+.textarea,
+.select {
+    padding: 0.75rem 1rem;
+    background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+    border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+    border-radius: 8px;
+    color: var(--text-primary, white);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.select option {
+    background-color: var(--bg-primary, #121212);
+    color: var(--text-primary, white);
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+    outline: none;
+    border-color: var(--accent-primary, #FF6B35);
+    background: var(--bg-secondary-hover, rgba(255, 107, 53, 0.05));
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Stacked by default for mobile */
+    gap: 1.5rem;
+}
+
+/* Quota Banner */
+.quotaBanner {
+    background: rgba(255, 107, 53, 0.05);
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 107, 53, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.quotaBadge {
+    background: linear-gradient(135deg, #38b2ac, #2c7a7b);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+}
+
+.quotaBadge.limitReached {
+    background: #e53e3e;
+}
+
+/* Button Group */
+.buttonGroup {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Profile Specific */
+.profileHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.profilePicWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Desktop Overrides */
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .profileHeader {
+        flex-direction: row;
+        text-align: left;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 768px) {
+    .formContainer {
+        padding: 1.5rem;
+    }
+
+    .quotaBanner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .buttonGroup {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .formContainer {
+        padding: 1rem;
+    }
+
+    .dashboardTitle {
+        font-size: 1.75rem;
+    }
+}

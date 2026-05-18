@@ -4,6 +4,7 @@ import { MenuItemCard } from '@/components/features/MenuItemCard';
 import { ReviewForm } from '@/components/features/ReviewForm';
 import { FavoriteButton } from '@/components/features/FavoriteButton';
 import { MenuWithFilters } from './MenuWithFilters';
+import { BackButton } from '@/components/ui/BackButton';
 import styles from './page.module.css';
 import { prisma } from '@/lib/prisma';
 import { notFound } from 'next/navigation';
@@ -18,8 +19,12 @@ export default async function RestaurantDetails({ params }: PageProps) {
     const { id } = await params;
     const session = await auth();
 
-    const restaurant = await prisma.restaurant.findUnique({
-        where: { id },
+    const restaurant = await prisma.restaurant.findFirst({
+        where: { 
+            id,
+            deletedAt: null,
+            status: 'APPROVED'
+        },
         include: {
             menuItems: true,
             reviews: {
@@ -79,6 +84,7 @@ export default async function RestaurantDetails({ params }: PageProps) {
                         <img src={imageSrc} alt={restaurant.name} className={styles.heroImage} />
                     </div>
                     <div className={styles.heroContent}>
+                        <BackButton className={styles.backBtn} />
                         <div className={styles.heroHeader}>
                             <div>
                                 <h1 className={styles.title}>{restaurant.name}</h1>

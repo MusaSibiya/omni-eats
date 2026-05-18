@@ -1,7 +1,14 @@
 .pageWrapper {
     min-height: 100vh;
     background: var(--bg-tertiary);
-    color: var(--text-primary);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    min-height: calc(100vh - 200px);
+}
+
+.backBtn {
+    margin-bottom: 2rem;
 }
 
 .checkoutGrid {
@@ -90,8 +97,10 @@
 
 /* Payment Section */
 .paymentSection {
-    /* No specific styles needed as CheckoutForm handles internal styling */
+    display: flex;
+    flex-direction: column;
 }
+
 
 /* Empty State */
 .emptyContainer {
@@ -176,4 +185,81 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Divider */
+.divider {
+    height: 1px;
+    background: var(--border-color);
+    margin: 16px 0;
+}
+
+/* PayFast Section */
+.payfastSection {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.payfastInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 24px;
+    background: var(--bg-primary);
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+}
+
+.payfastLogo {
+    height: 36px;
+    object-fit: contain;
+}
+
+.payfastDesc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    text-align: center;
+    line-height: 1.6;
+}
+
+.payfastButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #00a0e3, #0077b6);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 160, 227, 0.3);
+}
+
+.payfastButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 160, 227, 0.45);
+}
+
+.payfastButton:active {
+    transform: translateY(0);
+}
+
+.payfastNote {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.paymentError {
+    padding: 24px;
+    background: var(--bg-primary);
+    border-radius: 16px;
+    border: 1px solid #ef4444;
 }

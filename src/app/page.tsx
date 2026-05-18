@@ -7,6 +7,7 @@ import { auth } from '@/auth';
 
 export default async function Home() {
   const session = await auth();
+
   let featuredMeals;
 
   if (session?.user?.id) {
@@ -21,7 +22,13 @@ export default async function Home() {
     if (favoriteRestaurantIds.length > 0) {
       // 2. Get meals specifically from those restaurants
       featuredMeals = await prisma.menuItem.findMany({
-        where: { restaurantId: { in: favoriteRestaurantIds } },
+        where: {
+          restaurantId: { in: favoriteRestaurantIds },
+          restaurant: {
+            deletedAt: null,
+            status: 'APPROVED'
+          }
+        },
         take: 3,
         select: {
           id: true,
@@ -36,6 +43,12 @@ export default async function Home() {
   // 3. Fallback: If no user, no favorites, or not enough items, fetch general featured items
   if (!featuredMeals || featuredMeals.length === 0) {
     featuredMeals = await prisma.menuItem.findMany({
+      where: {
+        restaurant: {
+          deletedAt: null,
+          status: 'APPROVED'
+        }
+      },
       take: 3,
       select: {
         id: true,

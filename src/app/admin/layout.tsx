@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -12,6 +13,12 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const pathname = usePathname();
+    const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+
+    // Close sidebar when route changes
+    React.useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [pathname]);
 
     const navItems = [
         { href: '/admin', label: 'Overview', icon: '📊' },
@@ -22,10 +29,31 @@ export default function AdminLayout({
 
     return (
         <div className={styles.adminWrapper}>
-            <aside className={styles.sidebar}>
+            {/* Mobile Header Toggle */}
+            <div className={styles.mobileTopBar}>
+                <div className={styles.logo}>
+                    SOTOBE <span>MEALS</span>
+                </div>
+                <button
+                    className={`${styles.mobileToggle} ${isSidebarOpen ? styles.toggleOpen : ''}`}
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    aria-label="Toggle Navigation"
+                >
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div className={styles.sidebarOverlay} onClick={() => setIsSidebarOpen(false)} />
+            )}
+
+            <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.mobileOpen : ''}`}>
                 <div className={styles.sidebarHeader}>
                     <div className={styles.logo}>
-                        OMNI <span>EATS</span>
+                        SOTOBE <span>MEALS</span>
                     </div>
                     <div className={styles.adminBadge}>Admin Panel</div>
                 </div>
@@ -36,6 +64,7 @@ export default function AdminLayout({
                             key={item.href}
                             href={item.href}
                             className={`${styles.navLink} ${pathname === item.href ? styles.active : ''}`}
+                            onClick={() => setIsSidebarOpen(false)}
                         >
                             <span className={styles.navIcon}>{item.icon}</span>
                             <span>{item.label}</span>
@@ -46,7 +75,7 @@ export default function AdminLayout({
                 <div className={styles.sidebarFooter}>
                     <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
                         <ThemeToggle />
-                        <Link href="/" className={styles.backLink} style={{ flex: 1 }}>
+                        <Link href="/" className={styles.backLink} style={{ flex: 1 }} onClick={() => setIsSidebarOpen(false)}>
                             ← Back to Site
                         </Link>
                     </div>

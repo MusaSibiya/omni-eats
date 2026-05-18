@@ -374,7 +374,7 @@
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr;
         gap: 20px;
@@ -391,5 +391,41 @@
 
     .filters {
         padding: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        font-size: 0.9375rem;
+    }
+
+    .hero {
+        padding: 60px 0 40px;
+        margin-bottom: 32px;
+    }
+
+    .container {
+        padding: 0 16px 40px;
+    }
+
+    .grid {
+        gap: 16px;
+    }
+
+    .cardContent {
+        padding: 16px;
+    }
+
+    .restaurantName {
+        font-size: 1.1rem;
+    }
+
+    .filterBtn {
+        padding: 8px 16px;
+        font-size: 0.75rem;
     }
 }

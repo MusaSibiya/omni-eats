@@ -1,8 +1,19 @@
 import { prisma } from '@/lib/prisma';
 import styles from '../admin.module.css';
 
-export default async function AdminUsers() {
+import AdminSearch from '../AdminSearch';
+
+export default async function AdminUsers(props: { searchParams: Promise<{ query?: string }> }) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.query || '';
+
     const users = await prisma.user.findMany({
+        where: query ? {
+            OR: [
+                { name: { contains: query } },
+                { email: { contains: query } },
+            ]
+        } : undefined,
         orderBy: { createdAt: 'desc' },
         include: {
             _count: {
@@ -16,6 +27,8 @@ export default async function AdminUsers() {
             <div className={styles.pageHeader}>
                 <h1 className={styles.pageTitle}>User Management</h1>
             </div>
+
+            <AdminSearch placeholder="Search users by name or email..." />
 
             <div className={styles.tableContainer}>
                 <table className={styles.table}>

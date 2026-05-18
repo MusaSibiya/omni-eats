@@ -3,6 +3,7 @@
 import { useActionState } from 'react';
 import { authenticate } from '@/lib/actions';
 import { Button } from '@/components/ui/Button';
+import { BackButton } from '@/components/ui/BackButton';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -79,11 +80,10 @@ export default function LoginPage() {
             </div>
 
             <div className={styles.card}>
-                {/* Left Side - Login Form */}
                 <div className={styles.formSection}>
                     <div className={styles.mobileLogo}>
                         <div className={styles.logo}>
-                            OMNI <span>EATS</span>
+                            SOTOBE <span>EATS</span>
                         </div>
                     </div>
 
@@ -164,7 +164,7 @@ export default function LoginPage() {
                 <div className={styles.brandingSection}>
                     <div className={styles.brandingContent}>
                         <div className={styles.brandingLogo}>
-                            OMNI <span>EATS</span>
+                            SOTOBE <span>EATS</span>
                         </div>
 
                         <div className={styles.carouselContainer}>

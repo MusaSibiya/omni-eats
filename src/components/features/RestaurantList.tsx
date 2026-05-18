@@ -13,6 +13,8 @@ interface Restaurant {
     deliveryTime: string | null;
     imageUrl: string | null;
     description: string | null;
+    cuisineType: string | null;
+    menuItems: Array<{ price: number }> | null;
 }
 
 interface RestaurantListProps {
@@ -21,13 +23,19 @@ interface RestaurantListProps {
 
 const categories = ['All', 'Sushi', 'Italian', 'Burgers', 'Vegan', 'Fine Dining', 'Dessert'];
 
-// Helper to determine price/tags if missing (mocking for now to match UI design)
-const getMockDetails = (name: string) => {
-    // Logic to ensure UI isn't empty if DB lacks tags
-    return {
-        price: 'RR',
-        tags: ['Local', 'Tasty']
-    };
+const getDynamicDetails = (restaurant: Restaurant) => {
+    // Determine price category dynamically from menu items
+    let priceCat = 'RR';
+    if (restaurant.menuItems && restaurant.menuItems.length > 0) {
+        const avgPrice = restaurant.menuItems.reduce((acc, item) => acc + Number(item.price), 0) / restaurant.menuItems.length;
+        if (avgPrice < 80) priceCat = 'R';
+        else if (avgPrice > 200) priceCat = 'RRR';
+        else priceCat = 'RR';
+    }
+
+    // Determine tags from cuisine type
+    const tags = restaurant.cuisineType ? [restaurant.cuisineType] : ['Local'];
+    return { price: priceCat, tags };
 };
 
 export const RestaurantList = ({ initialRestaurants }: RestaurantListProps) => {
@@ -61,7 +69,7 @@ export const RestaurantList = ({ initialRestaurants }: RestaurantListProps) => {
 
             <div className={styles.grid}>
                 {filteredRestaurants.map((restaurant) => {
-                    const { price, tags } = getMockDetails(restaurant.name);
+                    const { price, tags } = getDynamicDetails(restaurant);
 
                     // Map seed names to real existing images in public/images
                     let imageSrc = '/images/restaurant-hero.png';

@@ -179,7 +179,7 @@ export default async function ProfilePage() {
                                 {user.orders.map(order => (
                                     <div key={order.id} className={styles.orderItem}>
                                         <div>
-                                            <p className={styles.orderId}>Order #{order.id.slice(-8).toUpperCase()}</p>
+                                            <p className={styles.orderId}>Order #{order.id.slice(-4).toUpperCase()}</p>
                                             <p className={styles.orderDate}>
                                                 {new Date(order.createdAt).toLocaleDateString()}
                                             </p>

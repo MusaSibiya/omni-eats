@@ -1,9 +1,13 @@
 import { prisma } from '@/lib/prisma';
 import { updateOrderStatus } from '@/lib/adminActions';
 import styles from '../admin.module.css';
+import AdminSearch from '../AdminSearch';
 
-export default async function AdminOrders() {
-    const orders = await prisma.order.findMany({
+export default async function AdminOrders(props: { searchParams: Promise<{ query?: string }> }) {
+    const searchParams = await props.searchParams;
+    const query = searchParams?.query || '';
+
+    let orders = await prisma.order.findMany({
         include: { user: true, items: { include: { menuItem: true } } },
         orderBy: { createdAt: 'desc' }
     });
@@ -11,6 +15,18 @@ export default async function AdminOrders() {
     const pending = orders.filter(o => o.status === 'PENDING');
     const cooking = orders.filter(o => o.status === 'COOKING');
     const delivered = orders.filter(o => o.status === 'DELIVERED');
+
+    if (query) {
+        const lowerQuery = query.toLowerCase();
+        orders = orders.filter(o => 
+            o.id.slice(-4).toLowerCase().includes(lowerQuery) || 
+            (o.user?.name && o.user.name.toLowerCase().includes(lowerQuery))
+        );
+    }
+
+    const filteredPending = orders.filter(o => o.status === 'PENDING');
+    const filteredCooking = orders.filter(o => o.status === 'COOKING');
+    const filteredDelivered = orders.filter(o => o.status === 'DELIVERED');
 
     return (
         <div>
@@ -21,10 +37,12 @@ export default async function AdminOrders() {
                 </div>
             </div>
 
+            <AdminSearch placeholder="Search orders by ID or customer name..." />
+
             <div className={styles.orderGrid}>
-                <OrderColumn title="Pending" orders={pending} />
-                <OrderColumn title="Cooking" orders={cooking} />
-                <OrderColumn title="Delivered" orders={delivered} />
+                <OrderColumn title="Pending" orders={filteredPending} />
+                <OrderColumn title="Cooking" orders={filteredCooking} />
+                <OrderColumn title="Delivered" orders={filteredDelivered} />
             </div>
         </div>
     );
@@ -42,7 +60,7 @@ function OrderColumn({ title, orders }: { title: string, orders: any[] }) {
                 {orders.map(order => (
                     <div key={order.id} className={styles.orderCard}>
                         <div className={styles.orderHeader}>
-                            <span className={styles.orderId}>#{order.id.slice(-5)}</span>
+                            <span className={styles.orderId}>#{order.id.slice(-4).toUpperCase()}</span>
                             <span className={styles.orderTotal}>R{Number(order.total).toFixed(2)}</span>
                         </div>
                         <p className={styles.orderItems}>

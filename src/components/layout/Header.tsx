@@ -4,24 +4,32 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession, signOut } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { handleSignOut } from '@/lib/actions';
 import styles from './Header.module.css';
 import { Button } from '@/components/ui/Button';
 import { CartDrawer } from '@/components/features/CartDrawer';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useCart } from '@/contexts/CartContext';
 
-export const Header = () => {
+import { Session } from 'next-auth';
+
+export const Header = ({ session: initialSession }: { session: Session | null }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const { data: session, status, update } = useSession();
+    const { data: sessionData, status } = useSession();
     const pathname = usePathname();
     const { cartCount } = useCart();
 
-    // Re-validate session when the user navigates
+    // Use initialSession for immediate render, then sessionData when it arrives
+    const session = sessionData || initialSession;
+
+    // Close menu when route changes
     useEffect(() => {
-        update();
+        setIsMenuOpen(false);
     }, [pathname]);
+
 
     useEffect(() => {
         const handleScroll = () => {
@@ -32,38 +40,72 @@ export const Header = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    // Hide Header on Admin pages
-    if (pathname?.startsWith('/admin')) {
+    // Prevent scrolling when mobile menu is open
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMenuOpen]);
+
+
+    // Hide Header on Admin, Restaurant, and Driver Dashboard pages
+    if (pathname?.startsWith('/admin') || pathname?.startsWith('/restaurant-dashboard') || pathname?.startsWith('/driver-dashboard')) {
         return null;
     }
 
+    const navLinks = (
+        <>
+            <Link href="/" className={`${styles.link} ${pathname === '/' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                Discover
+            </Link>
+            <Link href="/restaurants" className={`${styles.link} ${pathname === '/restaurants' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                Restaurants
+            </Link>
+            {!session && (
+                <>
+                    <Link href="/register-restaurant" className={`${styles.link} ${pathname === '/register-restaurant' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                        Partner with Us
+                    </Link>
+                    <Link href="/drive-with-us" className={`${styles.link} ${pathname === '/drive-with-us' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                        Drive with Us
+                    </Link>
+                </>
+            )}
+            {session && (
+                <>
+                    {session.user?.role === 'DRIVER' && (
+                        <Link href="/driver-dashboard" className={`${styles.link} ${pathname === '/driver-dashboard' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                            Driver Portal
+                        </Link>
+                    )}
+                    <Link href="/favorites" className={`${styles.link} ${pathname === '/favorites' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                        Favorites
+                    </Link>
+                    <Link href="/orders" className={`${styles.link} ${pathname === '/orders' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                        Orders
+                    </Link>
+                    <Link href="/profile" className={`${styles.link} ${pathname === '/profile' ? styles.active : ''}`} onClick={() => setIsMenuOpen(false)}>
+                        Profile
+                    </Link>
+                </>
+            )}
+        </>
+    );
+
     return (
-        <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''}`}>
+        <header className={`${styles.header} ${isScrolled ? styles.scrolled : ''} ${isMenuOpen ? styles.menuOpen : ''}`}>
             <div className={styles.container}>
                 <div className={styles.logo}>
-                    OMNI <span>EATS</span>
+                  SOTOBE   <span> MEALS </span>
                 </div>
 
                 <nav className={styles.nav}>
-                    <Link href="/" className={`${styles.link} ${pathname === '/' ? styles.active : ''}`}>
-                        Discover
-                    </Link>
-                    <Link href="/restaurants" className={`${styles.link} ${pathname === '/restaurants' ? styles.active : ''}`}>
-                        Restaurants
-                    </Link>
-                    {status === 'authenticated' && (
-                        <>
-                            <Link href="/favorites" className={`${styles.link} ${pathname === '/favorites' ? styles.active : ''}`}>
-                                Favorites
-                            </Link>
-                            <Link href="/orders" className={`${styles.link} ${pathname === '/orders' ? styles.active : ''}`}>
-                                Orders
-                            </Link>
-                            <Link href="/profile" className={`${styles.link} ${pathname === '/profile' ? styles.active : ''}`}>
-                                Profile
-                            </Link>
-                        </>
-                    )}
+                    {navLinks}
                 </nav>
 
                 <div className={styles.actions}>
@@ -80,23 +122,60 @@ export const Header = () => {
                         </svg>
                         {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
                     </button>
-                    {status === 'authenticated' ? (
-                        <div className={styles.userInfo}>
-                            <span className={styles.userName}>{session.user?.name}</span>
-                            <button
-                                className={styles.signOutBtn}
-                                onClick={() => signOut({ callbackUrl: '/' })}
-                            >
-                                Sign Out
-                            </button>
-                        </div>
-                    ) : (
-                        <Link href="/login" className={styles.signInLink}>
-                            Sign In
-                        </Link>
-                    )}
+                    <div className={styles.authSection}>
+                        {status === 'loading' && !session ? (
+                            <div className={styles.loadingPulse}></div>
+                        ) : session ? (
+                            <div className={styles.userInfo}>
+                                <span className={styles.userName}>{session.user?.name}</span>
+                                <button
+                                    className={styles.signOutBtn}
+                                    onClick={() => handleSignOut()}
+                                >
+                                    Sign Out
+                                </button>
+                            </div>
+                        ) : (
+                            <Link href="/login" className={styles.signInLink}>
+                                Sign In
+                            </Link>
+                        )}
+                    </div>
+                    <button
+                        className={styles.burgerBtn}
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle menu"
+                    >
+                        <div className={`${styles.burgerLine} ${isMenuOpen ? styles.open : ''}`} />
+                        <div className={`${styles.burgerLine} ${isMenuOpen ? styles.open : ''}`} />
+                        <div className={`${styles.burgerLine} ${isMenuOpen ? styles.open : ''}`} />
+                    </button>
                 </div>
             </div>
+
+            {/* Mobile Nav Overlay */}
+            <div className={`${styles.mobileNav} ${isMenuOpen ? styles.active : ''}`}>
+                <div className={styles.mobileNavContainer}>
+                    <div className={styles.mobileNavContent}>
+                        {navLinks}
+                        <div className={styles.mobileAuth}>
+                            {session ? (
+                                <button
+                                    className={styles.mobileSignOutBtn}
+                                    onClick={() => handleSignOut()}
+                                >
+                                    Sign Out
+                                </button>
+                            ) : (
+                                <Link href="/login" className={styles.mobileSignInBtn} onClick={() => setIsMenuOpen(false)}>
+                                    Sign In
+                                </Link>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
         </header>
     );

@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { BackButton } from '@/components/ui/BackButton';
 import styles from './page.module.css';
 
 export default async function OrdersPage() {
@@ -52,6 +53,7 @@ export default async function OrdersPage() {
         <>
             <main className={styles.main}>
                 <div className={styles.container}>
+                    <BackButton className={styles.backBtn} />
                     <div className={styles.pageHeader}>
                         <h1 className={styles.title}>My Orders</h1>
                         <Link href="/restaurants">
@@ -78,7 +80,7 @@ export default async function OrdersPage() {
                                             <div key={order.id} className={styles.orderCard}>
                                                 <div className={styles.orderHeader}>
                                                     <div>
-                                                        <span className={styles.orderId}>Order #{order.id.slice(-8).toUpperCase()}</span>
+                                                        <span className={styles.orderId}>Order #{order.id.slice(-4).toUpperCase()}</span>
                                                         <span className={styles.orderDate}>{formatDate(order.createdAt)}</span>
                                                     </div>
                                                     <span className={`${styles.statusBadge} ${styles[order.status.toLowerCase()]}`}>
@@ -97,8 +99,13 @@ export default async function OrdersPage() {
                                                     ))}
                                                 </div>
                                                 <div className={styles.orderFooter}>
-                                                    <span className={styles.totalLabel}>Total</span>
-                                                    <span className={styles.orderTotal}>R{Number(order.total).toFixed(2)}</span>
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                                        <span className={styles.totalLabel}>Total</span>
+                                                        <span className={styles.orderTotal}>R{Number(order.total).toFixed(2)}</span>
+                                                    </div>
+                                                    <Link href={`/orders/${order.id}`}>
+                                                        <button className={styles.primaryBtn} style={{ padding: '8px 16px', fontSize: '0.9rem' }}>Track Order</button>
+                                                    </Link>
                                                 </div>
                                             </div>
                                         ))}
@@ -114,7 +121,7 @@ export default async function OrdersPage() {
                                             <div key={order.id} className={styles.orderCard}>
                                                 <div className={styles.orderHeader}>
                                                     <div>
-                                                        <span className={styles.orderId}>Order #{order.id.slice(-8).toUpperCase()}</span>
+                                                        <span className={styles.orderId}>Order #{order.id.slice(-4).toUpperCase()}</span>
                                                         <span className={styles.orderDate}>{formatDate(order.createdAt)}</span>
                                                     </div>
                                                     <span className={`${styles.statusBadge} ${styles[order.status.toLowerCase()]}`}>

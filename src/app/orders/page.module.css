@@ -6,9 +6,13 @@
 }
 
 .container {
-    max-width: 1400px;
+    max-width: 1000px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 2rem;
+}
+
+.backBtn {
+    margin-bottom: 2rem;
 }
 
 .pageHeader {

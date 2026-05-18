@@ -3,7 +3,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem;
+    padding: 2rem;
+    flex-direction: column;
     /* Premium Abstract Background */
     background:
         radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%),
@@ -287,7 +288,7 @@
     font-weight: 700;
     text-align: center;
     color: white;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
     letter-spacing: -0.02em;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
     /* Pop text off background */
@@ -296,7 +297,7 @@
 .subtitle {
     text-align: center;
     color: #cbd5e1;
-    margin-bottom: 2.5rem;
+    margin-bottom: 1.75rem;
     font-size: 0.95rem;
 }
 
@@ -382,7 +383,7 @@
     padding: 1.2rem;
     font-size: 1.1rem;
     font-weight: 600;
-    margin-top: 0.5rem;
+    margin-top: 0.25rem;
     background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
     border: none;
     border-radius: 12px;
@@ -423,7 +424,7 @@
 }
 
 .footer {
-    margin-top: 2.5rem;
+    margin-top: 1rem;
     text-align: center;
     font-size: 0.9rem;
     color: #9ca3af;
@@ -439,6 +440,41 @@
 
 .footerLink:hover {
     color: #ff8f6b;
+}
+
+/* Restaurant Link - Top Right */
+.restaurantLinkTop {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+    text-align: right;
+}
+
+.restaurantLinkTop p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+.restaurantButton {
+    display: inline-block;
+    padding: 0.875rem 1.75rem;
+    background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 16px -4px rgba(255, 107, 53, 0.4);
+}
+
+.restaurantButton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -4px rgba(255, 107, 53, 0.5);
+    filter: brightness(1.1);
 }
 
 /* Mobile Responsiveness */
@@ -461,6 +497,21 @@
 
     .logo {
         font-size: 2rem;
+    }
+
+    .restaurantLinkTop {
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .restaurantLinkTop p {
+        font-size: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .restaurantButton {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.85rem;
     }
 }
 

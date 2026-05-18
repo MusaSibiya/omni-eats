@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma';
 import styles from './admin.module.css';
+import { RefreshButton } from '@/components/ui/RefreshButton';
 
 export default async function AdminDashboard() {
     const totalOrders = await prisma.order.count();
@@ -9,12 +10,32 @@ export default async function AdminDashboard() {
     const totalUsers = await prisma.user.count();
     const totalRestaurants = await prisma.restaurant.count();
 
-    // Calculate growth percentages (mock data - you can calculate from historical data)
+    const recentOrders = await prisma.order.findMany({
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: {
+            user: {
+                select: { name: true }
+            },
+            items: {
+                include: {
+                    menuItem: {
+                        select: { name: true, restaurant: { select: { name: true } } }
+                    }
+                }
+            }
+        }
+    });
+
+    // Calculate some basic dynamic growth based on total vs recent (pseudo-growth for now to avoid zero division)
+    const orderGrowth = totalOrders > 0 ? ((recentOrders.length / totalOrders) * 100).toFixed(1) : '0.0';
+    const revenueValue = Number(totalRevenue._sum.total || 0);
+
     const stats = [
         {
             label: 'Restaurants',
             value: totalRestaurants.toString(),
-            growth: '+5.4%',
+            growth: '+100%', // Assume all are new for demo
             isPositive: true,
             icon: (
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -25,27 +46,27 @@ export default async function AdminDashboard() {
             ),
             gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)',
             shadowColor: 'rgba(245, 158, 11, 0.4)',
-            progress: 45
+            progress: totalRestaurants > 0 ? 100 : 0
         },
         {
             label: 'Total Revenue',
-            value: `R${Number(totalRevenue._sum.total || 0).toFixed(2)}`,
-            growth: '+12.5%',
+            value: `R${revenueValue.toFixed(2)}`,
+            growth: 'Ongoing',
             isPositive: true,
             icon: (
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="12" y1="1" x2="12" y2="23"></line>
-                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9 16V8h4a2 2 0 0 1 0 4H9l3 4"></path>
                 </svg>
             ),
             gradient: 'linear-gradient(135deg, #FF6B35 0%, #E85D2A 100%)',
             shadowColor: 'rgba(255, 107, 53, 0.4)',
-            progress: 75
+            progress: revenueValue > 0 ? 100 : 0
         },
         {
             label: 'Active Users',
             value: totalUsers.toString(),
-            growth: '+23.1%',
+            growth: '+100%',
             isPositive: true,
             icon: (
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -57,12 +78,12 @@ export default async function AdminDashboard() {
             ),
             gradient: 'linear-gradient(135deg, #64748B 0%, #475569 100%)',
             shadowColor: 'rgba(100, 116, 139, 0.4)',
-            progress: 88
+            progress: totalUsers > 0 ? 100 : 0
         },
         {
             label: 'Total Orders',
             value: totalOrders.toString(),
-            growth: '+8.2%',
+            growth: `+${orderGrowth}%`,
             isPositive: true,
             icon: (
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -73,7 +94,7 @@ export default async function AdminDashboard() {
             ),
             gradient: 'linear-gradient(135deg, #1A1D23 0%, #30343a 100%)',
             shadowColor: 'rgba(26, 29, 35, 0.4)',
-            progress: 62
+            progress: totalOrders > 0 ? 100 : 0
         },
     ];
 
@@ -90,13 +111,7 @@ export default async function AdminDashboard() {
                         </p>
                     </div>
                     <div className={styles.headerActions}>
-                        <button className={styles.refreshBtn}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <polyline points="23 4 23 10 17 10"></polyline>
-                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
-                            </svg>
-                            Refresh
-                        </button>
+                        <RefreshButton className={styles.refreshBtn} />
                     </div>
                 </div>
             </div>
@@ -155,18 +170,45 @@ export default async function AdminDashboard() {
                     </div>
                 </div>
 
-                <div className={styles.premiumEmptyState}>
-                    <div className={styles.emptyStateGlow}></div>
-                    <div className={styles.emptyIconWrapper}>
-                        <svg className={styles.emptyIcon} width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                            <line x1="18" y1="20" x2="18" y2="10"></line>
-                            <line x1="12" y1="20" x2="12" y2="4"></line>
-                            <line x1="6" y1="20" x2="6" y2="14"></line>
-                        </svg>
+                {recentOrders.length > 0 ? (
+                    <div className={styles.activityList} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+                        {recentOrders.map(order => (
+                            <div key={order.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', background: 'var(--surface-primary)', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                    <div style={{ padding: '0.5rem', background: 'rgba(255,107,53,0.1)', borderRadius: '8px', color: '#FF6B35' }}>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                            <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle>
+                                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Order #{order.id.slice(-4).toUpperCase()} - {order.user?.name || 'Guest'}</h4>
+                                        <p style={{ fontSize: '0.85rem', color: '#9ca3af' }}>
+                                            {order.items.length} items from {order.items[0]?.menuItem?.restaurant?.name || 'Multiple'}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div style={{ textAlign: 'right' }}>
+                                    <div style={{ fontWeight: 'bold', color: '#10b981' }}>+ R{Number(order.total).toFixed(2)}</div>
+                                    <div style={{ fontSize: '0.8rem', color: '#9ca3af' }}>{new Date(order.createdAt).toLocaleDateString()}</div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                    <h3 className={styles.emptyTitle}>No Recent Activity</h3>
-                    <p className={styles.emptyText}>Your recent business activity will appear here</p>
-                </div>
+                ) : (
+                    <div className={styles.premiumEmptyState}>
+                        <div className={styles.emptyStateGlow}></div>
+                        <div className={styles.emptyIconWrapper}>
+                            <svg className={styles.emptyIcon} width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                <line x1="18" y1="20" x2="18" y2="10"></line>
+                                <line x1="12" y1="20" x2="12" y2="4"></line>
+                                <line x1="6" y1="20" x2="6" y2="14"></line>
+                            </svg>
+                        </div>
+                        <h3 className={styles.emptyTitle}>No Recent Activity</h3>
+                        <p className={styles.emptyText}>Your recent business activity will appear here</p>
+                    </div>
+                )}
             </div>
         </div>
     );
