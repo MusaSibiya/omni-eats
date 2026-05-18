@@ -43,26 +43,100 @@ export const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         document.head.appendChild(script);
     }, [apiKey]);
 
-    if (!apiKey || apiKey === 'YOUR_GOOGLE_MAPS_API_KEY_HERE') {
-        return (
-            <div className={styles.autocompleteContainer}>
-                <input 
-                    type="text" 
-                    value={value} 
-                    onChange={(e) => onChange(e.target.value)}
-                    className={styles.input}
-                    placeholder="⚠️ Please add your Google Maps API Key to .env"
-                />
-                <p style={{ fontSize: '0.7rem', color: 'var(--accent-primary)', marginTop: '4px' }}>
-                    Google Maps API Key is missing. Check your .env file.
-                </p>
-            </div>
-        );
+    if (!apiKey || apiKey === 'YOUR_GOOGLE_MAPS_API_KEY_HERE' || apiKey === '') {
+        return <MockAutocompleteComponent value={value} onChange={onChange} placeholder={placeholder} className={className} />;
     }
 
-    if (!isLoaded) return <div className={styles.loading}>Loading Google Maps...</div>;
+    if (!isLoaded) return <div className={styles.loading}>Loading Maps...</div>;
 
     return <AutocompleteComponent value={value} onChange={onChange} placeholder={placeholder} className={className} />;
+};
+
+const MOCK_SUGGESTIONS = [
+    { main: '254 Fox Street', sub: 'City and Suburban, Johannesburg, 2001' },
+    { main: '160 Jan Smuts Avenue', sub: 'Rosebank, Johannesburg, 2196' },
+    { main: '88 Maude Street', sub: 'Sandton, Johannesburg, 2196' },
+    { main: '5th Street', sub: 'Sandhurst, Sandton, 2196' },
+    { main: 'V&A Waterfront', sub: 'Breakwater Blvd, Cape Town, 8001' },
+    { main: '93 Long Street', sub: 'Cape Town City Centre, Cape Town, 8001' },
+    { main: 'Umhlanga Rocks Drive', sub: 'Umhlanga, KwaZulu-Natal, 4319' },
+    { main: 'Florida Road', sub: 'Morningside, Durban, 4001' },
+    { main: 'Pretorius Street', sub: 'Hatfield, Pretoria, 0028' },
+    { main: 'Lynnwood Road', sub: 'Lynnwood, Pretoria, 0081' },
+    { main: 'Main Road', sub: 'Sea Point, Cape Town, 8005' },
+    { main: 'Rivonia Road', sub: 'Morningside, Sandton, 2196' },
+    { main: 'William Nicol Drive', sub: 'Bryanston, Sandton, 2191' }
+];
+
+const MockAutocompleteComponent: React.FC<AddressAutocompleteProps> = ({ 
+    value, 
+    onChange, 
+    placeholder,
+    className
+}) => {
+    const [suggestions, setSuggestions] = useState<typeof MOCK_SUGGESTIONS>([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+                setShowSuggestions(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const query = e.target.value;
+        onChange(query);
+
+        if (query.length > 2) {
+            const matches = MOCK_SUGGESTIONS.filter(s => 
+                s.main.toLowerCase().includes(query.toLowerCase()) || 
+                s.sub.toLowerCase().includes(query.toLowerCase())
+            );
+            setSuggestions(matches);
+            setShowSuggestions(true);
+        } else {
+            setShowSuggestions(false);
+        }
+    };
+
+    const handleSelect = (s: any) => {
+        onChange(`${s.main}, ${s.sub}`);
+        setShowSuggestions(false);
+    };
+
+    return (
+        <div className={`${styles.autocompleteContainer} ${className}`} ref={containerRef}>
+            <input
+                value={value}
+                onChange={handleInput}
+                placeholder={placeholder}
+                className={styles.input}
+                autoComplete="off"
+                onFocus={() => value.length > 2 && setShowSuggestions(true)}
+            />
+            {showSuggestions && suggestions.length > 0 && (
+                <div className={styles.suggestionsList}>
+                    {suggestions.map((s, i) => (
+                        <div key={i} className={styles.suggestionItem} onClick={() => handleSelect(s)}>
+                            <span className={styles.suggestionIcon}>📍</span>
+                            <div className={styles.suggestionText}>
+                                <span className={styles.mainText}>{s.main}</span>
+                                <span className={styles.subText}>{s.sub}</span>
+                            </div>
+                        </div>
+                    ))}
+                    <div style={{ padding: '8px', borderTop: '1px solid var(--border-color)', textAlign: 'right', fontSize: '0.65rem', color: 'var(--text-secondary)', opacity: 0.5 }}>
+                        Demo Mode: Mock Locations Enabled
+                    </div>
+                </div>
+            )}
+        </div>
+    );
 };
 
 const AutocompleteComponent: React.FC<AddressAutocompleteProps> = ({ 

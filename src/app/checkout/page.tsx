@@ -41,7 +41,7 @@ export default function CheckoutPage() {
                 body: JSON.stringify({ 
                     items, 
                     amount: cartTotal,
-                    deliveryAddress
+                    deliveryAddress: deliveryAddress
                 }),
             })
                 .then(async (res) => {
