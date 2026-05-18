@@ -98,7 +98,7 @@ export default function OrderTrackerClient({ order }: OrderTrackerClientProps) {
                     <div style={{ 
                         position: 'absolute', 
                         top: '50%', 
-                        left: \`\${10 + (progress * 0.8)}%\`, 
+                        left: `${10 + (progress * 0.8)}%`, 
                         transform: 'translate(-50%, -50%)', 
                         transition: 'left 2s cubic-bezier(0.4, 0, 0.2, 1)',
                         zIndex: 10,

@@ -41,3 +41,23 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# database
+/prisma/dev.db
+/dev.db
+
+# debug and temp files
+*.log
+*.txt
+*.json
+!package.json
+!tsconfig.json
+!next.config.ts
+!eslint.config.mjs
+tmp_*
+check-*
+check_orders.js
+make-driver.js
+query-users.js
+test_db.js
+stripe_page.tsx
