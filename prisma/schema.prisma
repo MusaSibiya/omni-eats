@@ -15,6 +15,8 @@ model User {
   phone       String?
   role        String       @default("USER")
   preferences String?
+  resetToken  String?      @unique
+  resetTokenExpiry DateTime?
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   addresses   Address[]
@@ -157,4 +159,15 @@ model Payment {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   order            Order    @relation(fields: [orderId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      String   @default("ORDER")
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

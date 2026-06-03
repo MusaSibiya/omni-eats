@@ -31,6 +31,20 @@ export default async function OrdersPage() {
 
     const restaurantId = ownerRestaurants[0].id;
 
+    // Mark notifications as read when viewing orders
+    try {
+        await prisma.notification.updateMany({
+            where: {
+                userId: session.user.id,
+                isRead: false,
+                type: 'ORDER'
+            },
+            data: { isRead: true }
+        });
+    } catch (error) {
+        console.error('Failed to clear notifications:', error);
+    }
+
     // Fetch orders that contain at least one item from this restaurant
     const orders = await prisma.order.findMany({
         where: {

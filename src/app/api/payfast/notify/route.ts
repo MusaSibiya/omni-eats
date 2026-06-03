@@ -92,6 +92,40 @@ export async function POST(req: NextRequest) {
             },
         });
 
+        // 5. Create Notifications for Restaurant Owners
+        try {
+            const restaurants = await prisma.restaurant.findMany({
+                where: {
+                    menuItems: {
+                        some: {
+                            orderItems: {
+                                some: {
+                                    orderId: orderId
+                                }
+                            }
+                        }
+                    }
+                },
+                select: {
+                    userId: true,
+                    name: true
+                }
+            });
+
+            for (const restaurant of restaurants) {
+                await prisma.notification.create({
+                    data: {
+                        userId: restaurant.userId,
+                        title: 'New Order Received!',
+                        message: `You have a new order for ${restaurant.name}. Order ID: #${orderId.slice(-4).toUpperCase()}`,
+                        type: 'ORDER'
+                    }
+                });
+            }
+        } catch (notifError) {
+            console.error('Failed to create PayFast order notifications:', notifError);
+        }
+
         console.log('✅ PayFast ITN verified. Order confirmed:', orderId);
         return new NextResponse('OK', { status: 200 });
     } catch (error: any) {

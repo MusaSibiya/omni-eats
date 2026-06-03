@@ -134,7 +134,7 @@ export default function LoginPage() {
                                 <input type="checkbox" />
                                 Remember me
                             </label>
-                            <Link href="#" className={styles.forgotLink}>Forgot password?</Link>
+                            <Link href="/forgot-password" className={styles.forgotLink}>Forgot password?</Link>
                         </div>
 
                         <Button

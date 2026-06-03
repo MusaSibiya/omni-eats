@@ -15,6 +15,26 @@ export default function RestaurantDashboardLayout({
 }) {
     const pathname = usePathname();
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
+    const [unreadCount, setUnreadCount] = React.useState(0);
+
+    // Fetch unread notifications count
+    const fetchUnreadCount = React.useCallback(async () => {
+        try {
+            const res = await fetch('/api/notifications/unread-count');
+            const data = await res.json();
+            if (data.count !== undefined) {
+                setUnreadCount(data.count);
+            }
+        } catch (error) {
+            console.error('Failed to fetch unread count:', error);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        fetchUnreadCount();
+        const interval = setInterval(fetchUnreadCount, 30000); // Check every 30 seconds
+        return () => clearInterval(interval);
+    }, [fetchUnreadCount]);
 
     // Close sidebar when route changes
     React.useEffect(() => {
@@ -70,6 +90,11 @@ export default function RestaurantDashboardLayout({
                         >
                             <span className={styles.navIcon}>{item.icon}</span>
                             <span>{item.label}</span>
+                            {item.label === 'Orders' && unreadCount > 0 && (
+                                <span className={styles.notificationBadge}>
+                                    {unreadCount}
+                                </span>
+                            )}
                         </Link>
                     ))}
                 </nav>

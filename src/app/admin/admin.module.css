@@ -1,4 +1,4 @@
-﻿/* Admin Panel Styles - Matching Main App Design */
+/* Admin Panel Styles - Matching Main App Design */
 
 /* Wrapper */
 .adminWrapper {
@@ -93,6 +93,22 @@
 
 .navIcon {
     font-size: 1.25rem;
+}
+
+.notificationBadge {
+    margin-left: auto;
+    background-color: var(--accent-primary);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 20px;
+    min-width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
 }
 
 /* Sidebar Footer */

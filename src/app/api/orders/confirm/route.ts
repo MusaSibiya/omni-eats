@@ -128,6 +128,44 @@ export async function POST(req: NextRequest) {
             });
 
             console.log('✅ Order updated successfully:', updatedOrder.id);
+
+            // 4. Create Notifications for Restaurant Owners
+            try {
+                // Get unique restaurant owners for this order
+                const restaurants = await prisma.restaurant.findMany({
+                    where: {
+                        menuItems: {
+                            some: {
+                                orderItems: {
+                                    some: {
+                                        orderId: updatedOrder.id
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    select: {
+                        userId: true,
+                        name: true
+                    }
+                });
+
+                for (const restaurant of restaurants) {
+                    await prisma.notification.create({
+                        data: {
+                            userId: restaurant.userId,
+                            title: 'New Order Received!',
+                            message: `You have a new order for ${restaurant.name}. Order ID: #${updatedOrder.id.slice(-4).toUpperCase()}`,
+                            type: 'ORDER'
+                        }
+                    });
+                }
+                console.log(`✅ Notifications created for ${restaurants.length} restaurants`);
+            } catch (notifError) {
+                console.error('Failed to create order notifications:', notifError);
+                // Don't fail the whole request if notifications fail
+            }
+
             return NextResponse.json({
                 success: true,
                 order: updatedOrder,
