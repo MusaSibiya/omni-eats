@@ -39,7 +39,10 @@ export default async function ProfilePage() {
                     {/* Profile Information */}
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Personal Information</h2>
-                        <form action={updateProfile} className={styles.form}>
+                        <form action={async (formData) => {
+                            'use server';
+                            await updateProfile(formData);
+                        }} className={styles.form}>
                             <div className={styles.formRow}>
                                 <div className={styles.formGroup}>
                                     <label htmlFor="name">Full Name</label>
@@ -82,7 +85,10 @@ export default async function ProfilePage() {
                     {/* Change Password */}
                     <section className={styles.section}>
                         <h2 className={styles.sectionTitle}>Change Password</h2>
-                        <form action={changePassword} className={styles.form}>
+                        <form action={async (formData) => {
+                            'use server';
+                            await changePassword(formData);
+                        }} className={styles.form}>
                             <div className={styles.formGroup}>
                                 <label htmlFor="currentPassword">Current Password</label>
                                 <input
@@ -152,7 +158,10 @@ export default async function ProfilePage() {
                                             <Link href={`/profile/addresses/${address.id}`}>
                                                 <button className={styles.secondaryBtn}>Edit</button>
                                             </Link>
-                                            <form action={deleteAddress.bind(null, address.id)}>
+                                            <form action={async () => {
+                                                'use server';
+                                                await deleteAddress(address.id);
+                                            }}>
                                                 <button type="submit" className={styles.dangerBtn}>Delete</button>
                                             </form>
                                         </div>

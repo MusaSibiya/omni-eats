@@ -54,7 +54,7 @@ export default function RestaurantDashboardLayout({
             {/* Mobile Header Toggle */}
             <div className={styles.mobileTopBar}>
                 <div className={styles.logo}>
-                    OMNI <span>EATS</span>
+                    SOTOBE <span>EATS</span>
                 </div>
                 <button
                     className={`${styles.mobileToggle} ${isSidebarOpen ? styles.toggleOpen : ''}`}
@@ -75,7 +75,7 @@ export default function RestaurantDashboardLayout({
             <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.mobileOpen : ''}`}>
                 <div className={styles.sidebarHeader}>
                     <div className={styles.logo}>
-                        OMNI <span>MEALS</span>
+                        SOTOBE <span>MEALS</span>
                     </div>
                     <div className={styles.adminBadge}>Restaurant Owner</div>
                 </div>

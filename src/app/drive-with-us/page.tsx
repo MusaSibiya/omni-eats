@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { applyToBeDriver } from '@/lib/driverActions';
 import { Footer } from '@/components/layout/Footer';
+import styles from './page.module.css';
 
 export default function DriveWithUsPage() {
     const router = useRouter();
@@ -62,12 +63,12 @@ export default function DriveWithUsPage() {
 
     if (success) {
         return (
-            <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
-                <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem' }}>
-                    <div style={{ background: 'var(--surface-primary)', padding: '4rem', borderRadius: '24px', textAlign: 'center', maxWidth: '500px', border: '1px solid var(--border-color)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)' }}>
-                        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🏎️</div>
-                        <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Welcome to the Fleet!</h1>
-                        <p style={{ color: 'var(--text-secondary)' }}>
+            <div className={styles.main}>
+                <div className={styles.successWrapper}>
+                    <div className={styles.successCard}>
+                        <div className={styles.successIcon}>🏎️</div>
+                        <h1 className={styles.successTitle}>Welcome to the Fleet!</h1>
+                        <p className={styles.successText}>
                             {session 
                                 ? "Your account has been upgraded! Taking you to the Driver Portal..."
                                 : "Your driver account was created successfully! Taking you to login..."
@@ -75,120 +76,81 @@ export default function DriveWithUsPage() {
                         </p>
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }
 
     return (
-        <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)', paddingTop: '100px' }}>
-            <div style={{ maxWidth: '600px', margin: '0 auto', padding: '2rem', width: '100%' }}>
-                <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-                    <h1 style={{ fontSize: '3rem', fontWeight: '800', marginBottom: '1rem' }}>Drive with Omni Eats</h1>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Turn your free time into earnings by delivering the city's best meals.</p>
+        <div className={styles.main}>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <h1 className={styles.title}>Drive with Sotobe Eats</h1>
+                    <p className={styles.subtitle}>Turn your free time into earnings by delivering the city's best meals.</p>
                 </div>
 
                 {error && (
-                    <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', padding: '1rem', borderRadius: '12px', marginBottom: '2rem', textAlign: 'center', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
+                    <div className={styles.error}>
                         {error}
                     </div>
                 )}
 
-                <div style={{ background: 'var(--surface-primary)', padding: '3rem', borderRadius: '24px', border: '1px solid var(--border-color)', boxShadow: '0 10px 30px rgba(0,0,0,0.2)' }}>
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                <div className={styles.formCard}>
+                    <form onSubmit={handleSubmit} className={styles.form}>
                         
                         {session ? (
-                            <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-                                <div style={{ width: '80px', height: '80px', background: 'var(--bg-tertiary)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem', fontSize: '2rem' }}>
-                                    👤
-                                </div>
-                                <h3 style={{ marginBottom: '0.5rem' }}>Logged in as {session.user?.name}</h3>
-                                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>You're just one click away from upgrading your account to a Driver profile!</p>
+                            <div className={styles.sessionNotice}>
+                                <h3>Hey, {session.user?.name}!</h3>
+                                <p>You're already logged in. Ready to upgrade your account and start earning as a driver?</p>
+                                <input type="hidden" name="email" value={session.user?.email || ''} />
+                                <input type="hidden" name="name" value={session.user?.name || ''} />
                             </div>
                         ) : (
                             <>
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Full Name</label>
-                                    <input 
-                                        type="text" 
-                                        name="name" 
-                                        required 
-                                        placeholder="John Doe"
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'white', fontSize: '1rem' }}
-                                    />
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Full Name</label>
+                                    <input className={styles.input} type="text" name="name" placeholder="John Doe" required />
                                 </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Email Address</label>
-                                    <input 
-                                        type="email" 
-                                        name="email" 
-                                        required 
-                                        placeholder="john@example.com"
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'white', fontSize: '1rem' }}
-                                    />
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Email Address</label>
+                                    <input className={styles.input} type="email" name="email" placeholder="john@example.com" required />
                                 </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Phone Number</label>
-                                    <input 
-                                        type="tel" 
-                                        name="phone" 
-                                        required 
-                                        placeholder="+27 XX XXX XXXX"
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'white', fontSize: '1rem' }}
-                                    />
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Password</label>
+                                    <input className={styles.input} type="password" name="password" placeholder="••••••••" required />
                                 </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Password</label>
-                                    <input 
-                                        type="password" 
-                                        name="password" 
-                                        required 
-                                        placeholder="Min 6 characters"
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'white', fontSize: '1rem' }}
-                                    />
-                                </div>
-
-                                <div>
-                                    <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '600' }}>Confirm Password</label>
-                                    <input 
-                                        type="password" 
-                                        name="confirmPassword" 
-                                        required 
-                                        placeholder="Confirm your password"
-                                        style={{ width: '100%', padding: '12px 16px', borderRadius: '12px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', color: 'white', fontSize: '1rem' }}
-                                    />
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Confirm Password</label>
+                                    <input className={styles.input} type="password" name="confirmPassword" placeholder="••••••••" required />
                                 </div>
                             </>
                         )}
 
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Vehicle Type</label>
+                            <select className={styles.input} name="vehicleType" required>
+                                <option value="BICYCLE">Bicycle</option>
+                                <option value="MOTORBIKE">Motorbike / Scooter</option>
+                                <option value="CAR">Car</option>
+                            </select>
+                        </div>
+
+                        <div className={styles.formGroup}>
+                            <label className={styles.label}>Phone Number</label>
+                            <input className={styles.input} type="tel" name="phone" placeholder="+27 12 345 6789" required />
+                        </div>
+
                         <button 
                             type="submit" 
+                            className={styles.submitBtn}
                             disabled={loading}
-                            style={{ 
-                                marginTop: '1rem',
-                                padding: '16px', 
-                                background: 'linear-gradient(135deg, var(--accent-primary) 0%, #E85D2A 100%)', 
-                                color: 'white', 
-                                border: 'none', 
-                                borderRadius: '12px',
-                                fontSize: '1.1rem',
-                                fontWeight: 'bold',
-                                cursor: loading ? 'not-allowed' : 'pointer',
-                                opacity: loading ? 0.7 : 1,
-                                boxShadow: '0 4px 15px rgba(255, 107, 53, 0.4)'
-                            }}
                         >
-                            {loading ? 'Processing...' : session ? 'Upgrade to Driver' : 'Apply to Drive'}
+                            {loading ? 'Processing...' : (session ? 'Upgrade to Driver' : 'Register as Driver')}
                         </button>
                     </form>
                 </div>
             </div>
-            
-            <div style={{ marginTop: 'auto' }}>
-                <Footer />
-            </div>
+            <Footer />
         </div>
     );
 }

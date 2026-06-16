@@ -8,7 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import styles from './page.module.css';
+import styles from './login.module.css';
 
 const slides = [
     {

@@ -1,7 +1,7 @@
 .container {
     min-height: 100vh;
     padding: 6rem 1.5rem 3rem;
-    max-width: 80rem;
+    max-width: 1400px;
     margin: 0 auto;
 }
 
@@ -17,23 +17,13 @@
 
 .grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 2rem;
 }
 
 @media (min-width: 768px) {
     .heroSkeleton {
         height: 400px;
-    }
-
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (min-width: 1024px) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -74,5 +64,15 @@
 
     100% {
         transform: translateX(150%) skewX(-20deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 4rem 1rem 2rem;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
     }
 }

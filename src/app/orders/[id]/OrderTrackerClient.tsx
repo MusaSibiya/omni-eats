@@ -73,7 +73,7 @@ export default function OrderTrackerClient({ order }: OrderTrackerClientProps) {
             case 'DELIVERED': 
                 return order.deliveryType === 'PICKUP'
                     ? 'Thank you for your order! We hope you enjoy your meal.'
-                    : 'Enjoy your meal! Thank you for using Omni Eats.';
+                    : 'Enjoy your meal! Thank you for using Sotobe Eats.';
             default: return 'Processing...';
         }
     };

@@ -107,20 +107,22 @@ export async function POST(req: NextRequest) {
                     }
                 },
                 select: {
-                    userId: true,
+                    ownerId: true,
                     name: true
                 }
             });
 
             for (const restaurant of restaurants) {
-                await prisma.notification.create({
-                    data: {
-                        userId: restaurant.userId,
-                        title: 'New Order Received!',
-                        message: `You have a new order for ${restaurant.name}. Order ID: #${orderId.slice(-4).toUpperCase()}`,
-                        type: 'ORDER'
-                    }
-                });
+                if (restaurant.ownerId) {
+                    await prisma.notification.create({
+                        data: {
+                            userId: restaurant.ownerId,
+                            title: 'New Order Received!',
+                            message: `You have a new order for ${restaurant.name}. Order ID: #${orderId.slice(-4).toUpperCase()}`,
+                            type: 'ORDER'
+                        }
+                    });
+                }
             }
         } catch (notifError) {
             console.error('Failed to create PayFast order notifications:', notifError);

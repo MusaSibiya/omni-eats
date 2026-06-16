@@ -27,10 +27,10 @@ function sanitizeData(data: any): any {
 
 export async function GET(
     req: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const restaurant = await prisma.restaurant.findUnique({
             where: { id },

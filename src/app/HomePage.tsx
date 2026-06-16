@@ -94,7 +94,7 @@ export default function HomePage({ featuredMeals }: HomePageProps) {
                             Tasty Meal Box
                         </h1>
                         <p className={styles.heroSubtitle}>
-                            Get pre-portioned ingredients for Omni Meal Kits
+                            Get pre-portioned ingredients for Sotobe Meal Kits
                             <br />
                             best recipes delivered direct to your door!
                         </p>
@@ -141,10 +141,10 @@ export default function HomePage({ featuredMeals }: HomePageProps) {
                 </div>
             </section>
 
-            {/* Why Omni Eats Section */}
+            {/* Why Sotobe Eats Section */}
             <section className={styles.whySection}>
                 <div className={styles.whyContainer}>
-                    <h2 className={styles.sectionTitle}>Why Omni Eats Meals</h2>
+                    <h2 className={styles.sectionTitle}>Why Sotobe Eats Meals</h2>
                     <div className={styles.whyGrid}>
                         <div className={styles.whyCard}>
                             <div className={styles.whyIcon}>

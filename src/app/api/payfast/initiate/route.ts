@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
             email_address: user?.email || '',
             m_payment_id: order.id,
             amount: amount.toFixed(2),
-            item_name: `Omni Eats Order #${order.id.slice(-4).toUpperCase()}`,
+            item_name: `Sotobe Eats Order #${order.id.slice(-4).toUpperCase()}`,
         };
 
         const params: Record<string, string> = {};

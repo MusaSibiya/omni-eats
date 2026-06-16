@@ -5,7 +5,6 @@
     align-items: center;
     justify-content: center;
     padding: 1.5rem;
-    /* Premium Abstract Background */
     background:
         radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%),
         url('/images/login_bg.png');
@@ -17,39 +16,18 @@
 
 /* 3D Floating Animations */
 @keyframes float-slow {
-
-    0%,
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-
-    50% {
-        transform: translate(-20px, -20px) rotate(5deg);
-    }
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(-20px, -20px) rotate(5deg); }
 }
 
 @keyframes float-medium {
-
-    0%,
-    100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-
-    50% {
-        transform: translate(15px, -25px) rotate(-8deg);
-    }
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(15px, -25px) rotate(-8deg); }
 }
 
 @keyframes float-fast {
-
-    0%,
-    100% {
-        transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-
-    50% {
-        transform: translate(-10px, 15px) rotate(10deg) scale(1.05);
-    }
+    0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+    50% { transform: translate(-10px, 15px) rotate(10deg) scale(1.05); }
 }
 
 .decorWrapper {
@@ -66,38 +44,28 @@
 .decorItem {
     position: absolute;
     opacity: 1;
-    /* Keep opacity high for blending */
     mix-blend-mode: screen;
-    /* BLENDING MODE MAGIC FOR BLACK BACKGROUNDS */
     filter: brightness(1.2) contrast(1.1);
-    /* Enhance visibility */
 }
 
-/* Large Floating Burger */
 .decorItem[data-item="burger"] {
     top: 15%;
-    /* Moved down to align with form */
     left: 2%;
-    /* Moved inward from -10% to be fully visible */
     width: 550px;
-    /* Slightly reduced for better fit */
     height: 550px;
     animation: float-slow 14s ease-in-out infinite;
     z-index: 2;
 }
 
-/* Floating Pizza Slice */
 .decorItem[data-item="pizza"] {
     bottom: 5%;
     right: -2%;
     width: 650px;
-    /* Much larger to match burger */
     height: 650px;
     animation: float-medium 12s ease-in-out infinite;
     z-index: 1;
 }
 
-/* Floating Tacos */
 .decorItem[data-item="taco"] {
     top: 15%;
     right: 15%;
@@ -106,22 +74,15 @@
     animation: float-fast 10s ease-in-out infinite reverse;
     z-index: 0;
     filter: blur(2px) brightness(1.1);
-    /* Subtle blur for depth */
-    mix-blend-mode: screen;
 }
 
-/* Glassmorphism Card Updates */
 .card {
     width: 100%;
     max-width: 900px;
-    /* Increased width for split layout */
     display: flex;
-    /* Enable flexbox for side-by-side */
     background: rgba(26, 29, 35, 0.8);
     border-radius: 24px;
-    box-shadow:
-        0 25px 50px -12px rgba(0, 0, 0, 0.5),
-        0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
     overflow: hidden;
     position: relative;
     z-index: 10;
@@ -130,11 +91,22 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* Specific styling for forgot/reset pages which use a simpler card */
+.formCard {
+    width: 100%;
+    max-width: 480px;
+    padding: 3rem;
+    background: rgba(26, 29, 35, 0.8);
+    border-radius: 24px;
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    z-index: 10;
+}
+
 .formSection {
     flex: 1;
     padding: 3rem 2.5rem;
     background: rgba(26, 29, 35, 0.4);
-    /* Slightly transparent dark bg */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -142,10 +114,7 @@
 
 .brandingSection {
     flex: 1;
-    /* Warm restaurant ambiance to match reference */
-    background:
-        linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)),
-        url('/images/restaurant_interior_bg.png');
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.6)), url('/images/restaurant_interior_bg.png');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -157,7 +126,6 @@
     color: white;
 }
 
-/* Remove the diagonal pattern for a cleaner look or keep it subtle */
 .brandingSection::before {
     content: '';
     position: absolute;
@@ -166,7 +134,6 @@
     width: 100%;
     height: 100%;
     background: linear-gradient(to bottom, rgba(255, 107, 53, 0.2), rgba(0, 0, 0, 0.8));
-    /* Warm top light */
     z-index: 1;
 }
 
@@ -179,7 +146,6 @@
 
 .brandingLogo {
     font-size: 3.5rem;
-    /* Larger like reference */
     font-weight: 800;
     margin-bottom: 2rem;
     letter-spacing: -0.03em;
@@ -188,12 +154,10 @@
 
 .brandingTitle {
     font-size: 2.2rem;
-    /* Larger headline */
     font-weight: 700;
     margin-bottom: 1.5rem;
     line-height: 1.1;
     text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    color: #ffffff;
 }
 
 .brandingText {
@@ -201,19 +165,11 @@
     line-height: 1.6;
     margin-bottom: 3rem;
     color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.brandingDots {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
 }
 
 .carouselContainer {
     position: relative;
     height: 240px;
-    /* Increased height for longer text */
     width: 100%;
     margin-bottom: 2rem;
 }
@@ -228,7 +184,6 @@
     transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;
     transform: translateY(10px);
     pointer-events: none;
-    /* Prevent clicks on hidden slides */
 }
 
 .activeSlide {
@@ -246,20 +201,10 @@
     cursor: pointer;
 }
 
-.dot:hover {
-    background: rgba(255, 255, 255, 0.5);
-}
-
 .activeDot {
     background: white !important;
     width: 30px;
-    /* Elongate active dot */
     border-radius: 5px;
-}
-
-.mobileLogo {
-    display: none;
-    /* Hidden on desktop */
 }
 
 .logoContainer {
@@ -280,7 +225,6 @@
     background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .title {
@@ -290,8 +234,6 @@
     color: white;
     margin-bottom: 0.25rem;
     letter-spacing: -0.02em;
-    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    /* Pop text off background */
 }
 
 .subtitle {
@@ -332,10 +274,6 @@
     outline: none;
 }
 
-.input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-}
-
 .input:focus {
     border-color: var(--accent-primary);
     background: rgba(0, 0, 0, 0.6);
@@ -355,27 +293,12 @@
     align-items: center;
     color: #cbd5e1;
     cursor: pointer;
-    user-select: none;
-}
-
-.checkboxLabel input {
-    margin-right: 0.5rem;
-    cursor: pointer;
-    accent-color: var(--accent-primary);
-    width: 16px;
-    height: 16px;
 }
 
 .forgotLink {
     color: var(--accent-primary);
     font-weight: 500;
     text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.forgotLink:hover {
-    color: #ff8f6b;
-    text-decoration: underline;
 }
 
 .submitButton {
@@ -383,7 +306,6 @@
     padding: 1.2rem;
     font-size: 1.1rem;
     font-weight: 600;
-    margin-top: 0.25rem;
     background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
     border: none;
     border-radius: 12px;
@@ -393,86 +315,27 @@
     box-shadow: 0 10px 20px -5px rgba(255, 107, 53, 0.4);
 }
 
-.submitButton:hover {
+.submitButton:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 15px 30px -5px rgba(255, 107, 53, 0.5);
-    filter: brightness(1.1);
-}
-
-.submitButton:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none;
-}
-
-.errorContainer {
-    min-height: 2rem;
-    display: flex;
-    align-items: flex-end;
 }
 
 .errorMessage {
     font-size: 0.9rem;
     color: #ef4444;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
     background: rgba(239, 68, 68, 0.1);
     padding: 0.5rem 1rem;
     border-radius: 8px;
-    width: 100%;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    margin-top: 1rem;
 }
 
 .successMessage {
-    background: rgba(16, 185, 129, 0.15);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
-
-.successIcon {
-    width: 32px;
-    height: 32px;
-    background: #10b981;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.successMessage div {
-    display: flex;
-    flex-direction: column;
-    font-size: 0.95rem;
-    color: #d1fae5;
-}
-
-.successMessage strong {
+    font-size: 0.9rem;
     color: #10b981;
-    font-size: 1.05rem;
-    margin-bottom: 2px;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
 }
 
 .footer {
@@ -486,45 +349,38 @@
     font-weight: 600;
     color: var(--accent-primary);
     text-decoration: none;
-    transition: color 0.2s ease;
-    margin-left: 0.25rem;
 }
 
-.footerLink:hover {
-    color: #ff8f6b;
-}
+/* Responsive Design */
 
-/* Mobile Responsiveness */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
     .card {
+        max-width: 500px;
         flex-direction: column;
-        max-width: 480px;
     }
 
     .brandingSection {
         display: none;
-        /* Hide branding side on mobile to save space */
     }
 
-    .mobileLogo {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 2rem;
+    .decorItem[data-item="burger"] {
+        width: 400px;
+        height: 400px;
     }
 
-    .logo {
-        font-size: 2rem;
+    .decorItem[data-item="pizza"] {
+        width: 450px;
+        height: 450px;
     }
 }
 
 @media (max-width: 768px) {
     .container {
-        padding: 1rem;
+        padding: 1.5rem;
     }
 
     .decorItem {
         opacity: 0.4;
-        /* Slightly more fade on mobile */
     }
 
     .decorItem[data-item="burger"] {
@@ -532,7 +388,6 @@
         height: 280px !important;
         top: 5%;
         left: -5%;
-        /* Brought into view */
     }
 
     .decorItem[data-item="pizza"] {
@@ -544,14 +399,35 @@
 
     .decorItem[data-item="taco"] {
         display: none;
-        /* Hide third item on small screens */
     }
 
-    .formSection {
+    .formSection, .formCard {
         padding: 2.5rem 1.5rem;
     }
 
     .title {
         font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 1.35rem;
+    }
+
+    .subtitle {
+        font-size: 0.875rem;
+    }
+
+    .input {
+        padding: 0.9rem 1rem;
+    }
+
+    .submitButton {
+        padding: 1rem;
     }
 }

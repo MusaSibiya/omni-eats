@@ -22,7 +22,7 @@ export function ReportDownloader({ data, className }: { data: DownloadOptions, c
     const [format, setFormat] = useState('pdf');
 
     const downloadFullCSV = () => {
-        let csv = `Omni Eats Premium Report for: ${data.restaurantName}\n`;
+        let csv = `Sotobe Eats Premium Report for: ${data.restaurantName}\n`;
         csv += `Date Generated:, ${new Date().toLocaleDateString()}\n\n`;
 
         csv += `--- EXECUTIVE SUMMARY ---\n`;

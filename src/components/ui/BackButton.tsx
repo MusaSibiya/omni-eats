@@ -7,9 +7,10 @@ import styles from './BackButton.module.css';
 interface BackButtonProps {
     className?: string;
     label?: string;
+    style?: React.CSSProperties;
 }
 
-export const BackButton: React.FC<BackButtonProps> = ({ className, label = 'Back' }) => {
+export const BackButton: React.FC<BackButtonProps> = ({ className, label = 'Back', style }) => {
     const router = useRouter();
 
     return (
@@ -17,6 +18,7 @@ export const BackButton: React.FC<BackButtonProps> = ({ className, label = 'Back
             onClick={() => router.back()}
             className={`${styles.backButton} ${className || ''}`}
             aria-label="Go back"
+            style={style}
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"

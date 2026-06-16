@@ -115,7 +115,7 @@ export default function RegisterRestaurantPage() {
         <div className={styles.pageContainer}>
             <div className={styles.formContainer}>
                 <h1>Register Your Restaurant</h1>
-                <p className={styles.subtitle}>Join Omni Eats and reach thousands of customers</p>
+                <p className={styles.subtitle}>Join Sotobe Eats and reach thousands of customers</p>
 
                 {error && <div className={styles.error}>{error}</div>}
 

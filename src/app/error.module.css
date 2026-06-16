@@ -35,17 +35,19 @@
 
 .primaryBtn {
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    background: linear-gradient(135deg, var(--accent-primary), #ff8c5a);
     color: white;
     border-radius: 99px;
     font-weight: 600;
     border: none;
-    transition: transform 0.2s ease;
+    transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+    cursor: pointer;
 }
 
 .primaryBtn:hover {
     transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.35);
 }
 
 .secondaryBtn {
@@ -56,8 +58,42 @@
     border-radius: 99px;
     font-weight: 600;
     transition: all 0.2s ease;
+    text-decoration: none;
 }
 
 .secondaryBtn:hover {
     border-color: var(--text-primary);
+}
+
+/* Responsive Design */
+
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+
+    .description {
+        font-size: 1rem;
+    }
+
+    .actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .primaryBtn, .secondaryBtn {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 1.75rem;
+    }
+
+    .icon {
+        font-size: 3rem;
+    }
 }

@@ -7,10 +7,10 @@ export async function sendPasswordResetEmail(email: string, token: string) {
 
     try {
         await resend.emails.send({
-            from: 'Omni Eats <onboarding@resend.dev>',
-            to: email,
-            subject: 'Reset your password',
-            html: `
+            from: 'Sotobe Eats <onboarding@resend.dev>',
+        to: email,
+        subject: 'Reset your password',
+        html: `
                 <h1>Password Reset</h1>
                 <p>Click the link below to reset your password. This link will expire in 1 hour.</p>
                 <a href="${resetUrl}">Reset Password</a>

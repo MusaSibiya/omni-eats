@@ -261,7 +261,12 @@ export function MenuWithFilters({ menuItems }: MenuWithFiltersProps) {
                                 {cat.items.map((item) => (
                                     <MenuItemCard
                                         key={item.id}
-                                        item={{ ...item, price: Number(item.price) }}
+                                        item={{ 
+                                            ...item, 
+                                            price: Number(item.price),
+                                            category: item.category || 'Uncategorized',
+                                            restaurantId: item.restaurantId || ''
+                                        } as any}
                                     />
                                 ))}
                             </div>

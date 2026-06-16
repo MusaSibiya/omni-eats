@@ -88,7 +88,9 @@ export default function ProfileForm({ restaurant }: ProfileFormProps) {
         try {
             const data = new FormData();
             Object.entries(formData).forEach(([key, value]) => {
-                data.append(key, value);
+                if (value !== null && value !== undefined) {
+                    data.append(key, String(value));
+                }
             });
             if (selectedFile) {
                 data.append('image', selectedFile);

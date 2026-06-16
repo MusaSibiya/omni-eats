@@ -38,8 +38,8 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
     };
 
     return (
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem', width: '100%' }}>
-            <div className={styles.pageHeader} style={{ marginBottom: '2rem' }}>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', width: '100%' }}>
+            <div className={styles.pageHeader}>
                 <div>
                     <h1 className={styles.pageTitle}>Driver Portal</h1>
                     <p className={styles.pageSubtitle}>
@@ -49,18 +49,18 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
                 <RefreshButton className={styles.refreshBtn} />
             </div>
 
-            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
                 <button 
                     onClick={() => setActiveTab('AVAILABLE')}
-                    className={activeTab === 'AVAILABLE' ? styles.primaryBtn : styles.dangerBtn}
-                    style={activeTab === 'AVAILABLE' ? {} : { color: 'var(--text-secondary)', borderColor: 'var(--border-color)', background: 'transparent' }}
+                    className={activeTab === 'AVAILABLE' ? styles.primaryBtn : styles.signOutBtn}
+                    style={{ flex: 1, minWidth: '200px' }}
                 >
                     Available Orders <span style={{ marginLeft: '8px', padding: '2px 8px', background: activeTab === 'AVAILABLE' ? 'rgba(255,255,255,0.2)' : 'var(--bg-secondary)', borderRadius: '12px', fontSize: '0.8rem' }}>{availableOrders.length}</span>
                 </button>
                 <button 
                     onClick={() => setActiveTab('MY_DELIVERIES')}
-                    className={activeTab === 'MY_DELIVERIES' ? styles.primaryBtn : styles.dangerBtn}
-                    style={activeTab === 'MY_DELIVERIES' ? {} : { color: 'var(--text-secondary)', borderColor: 'var(--border-color)', background: 'transparent' }}
+                    className={activeTab === 'MY_DELIVERIES' ? styles.primaryBtn : styles.signOutBtn}
+                    style={{ flex: 1, minWidth: '200px' }}
                 >
                     My Deliveries <span style={{ marginLeft: '8px', padding: '2px 8px', background: activeTab === 'MY_DELIVERIES' ? 'rgba(255,255,255,0.2)' : 'var(--bg-secondary)', borderRadius: '12px', fontSize: '0.8rem' }}>{myDeliveries.length}</span>
                 </button>
@@ -96,12 +96,23 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
                                             </div>
                                         </div>
                                     </div>
+                                    
+                                    <div className={styles.orderCard}>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <MapPin size={24} color="var(--accent-primary)" />
+                                            <div>
+                                                <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '600' }}>Delivery To</p>
+                                                <p style={{ margin: 0, fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{order.address}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                
                                 <button 
                                     onClick={() => handleAccept(order.id)}
-                                    disabled={loadingId === order.id}
                                     className={styles.primaryBtn}
                                     style={{ width: '100%', marginTop: '24px' }}
+                                    disabled={loadingId === order.id}
                                 >
                                     {loadingId === order.id ? 'Accepting...' : 'Accept Delivery'}
                                 </button>
@@ -117,46 +128,52 @@ export default function DriverClient({ user, availableOrders, myDeliveries }: an
                         <div className={styles.emptyState} style={{ gridColumn: '1 / -1' }}>
                             <Bike className={styles.emptyStateIcon} style={{ margin: '0 auto 16px auto', display: 'block' }} />
                             <h3 className={styles.emptyStateText} style={{ color: 'var(--text-primary)', marginBottom: '8px', fontSize: '1.5rem' }}>No active deliveries</h3>
-                            <p className={styles.emptyStateText}>Accept an order from the Available tab to start earning.</p>
+                            <p className={styles.emptyStateText}>Accept an order from the available tab to start your run.</p>
                         </div>
                     ) : (
                         myDeliveries.map((order: any) => (
-                            <div key={order.id} className={styles.orderColumn} style={{ borderColor: 'var(--accent-primary)' }}>
+                            <div key={order.id} className={styles.orderColumn} style={{ borderColor: 'var(--accent-primary)', borderWidth: '2px' }}>
                                 <div className={styles.orderColumnHeader}>
                                     <span className={styles.orderColumnTitle}>#{order.id.slice(-4).toUpperCase()}</span>
-                                    <span className={styles.orderBadge}>ON ROUTE</span>
+                                    <span className={styles.orderBadge} style={{ background: '#dcfce7', color: '#15803d' }}>
+                                        {order.status === 'READY' ? 'PICKUP READY' : 'IN TRANSIT'}
+                                    </span>
                                 </div>
+                                
                                 <div className={styles.orderList}>
                                     <div className={styles.orderCard}>
-                                        <div className={styles.orderLocationItem}>
-                                            <span className={styles.locationIcon}>🏬</span>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <Store size={24} color="var(--text-secondary)" />
                                             <div>
-                                                <p className={styles.locationLabel}>Pickup</p>
-                                                <p className={styles.locationName}>{order.items?.[0]?.menuItem?.restaurant?.name || 'Restaurant'}</p>
-                                                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                                    {order.items?.[0]?.menuItem?.restaurant?.address || 'Address not provided'}
-                                                </p>
+                                                <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '600' }}>Pickup From</p>
+                                                <p style={{ margin: 0, fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{order.items[0]?.menuItem.restaurant.name || 'Unknown'}</p>
+                                                <p style={{ margin: '4px 0 0 0', color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>{order.items[0]?.menuItem.restaurant.address}</p>
                                             </div>
                                         </div>
-                                        <div className={styles.orderLocationItem}>
-                                            <span className={styles.locationIcon}>📍</span>
+                                    </div>
+                                    
+                                    <div className={styles.orderCard}>
+                                        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                                            <MapPin size={24} color="var(--accent-primary)" />
                                             <div>
-                                                <p className={styles.locationLabel}>Dropoff</p>
-                                                <p className={styles.locationName}>{order.user?.name || 'Customer'}</p>
-                                                <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                                                    {order.deliveryAddress || 'Address not provided'}
-                                                </p>
+                                                <p style={{ margin: '0', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: '600' }}>Deliver To</p>
+                                                <p style={{ margin: 0, fontWeight: '700', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{order.address}</p>
+                                                <p style={{ margin: '4px 0 0 0', color: 'var(--text-tertiary)', fontSize: '0.8rem' }}>Customer: {order.user.name}</p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <button 
                                     onClick={() => handleComplete(order.id)}
-                                    disabled={loadingId === order.id}
                                     className={styles.primaryBtn}
-                                    style={{ width: '100%', marginTop: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+                                    style={{ width: '100%', marginTop: '24px', background: 'linear-gradient(135deg, #10b981, #059669)' }}
+                                    disabled={loadingId === order.id}
                                 >
-                                    {loadingId === order.id ? 'Completing...' : <><CheckCircle size={18} /> Mark as Delivered</>}
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                        <CheckCircle size={20} />
+                                        {loadingId === order.id ? 'Completing...' : 'Mark as Delivered'}
+                                    </div>
                                 </button>
                             </div>
                         ))

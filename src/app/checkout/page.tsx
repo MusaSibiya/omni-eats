@@ -1,26 +1,17 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import CheckoutForm from '../../components/checkout/CheckoutForm';
 import { useCart } from '@/contexts/CartContext';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import styles from './page.module.css';
 import Image from 'next/image';
 import Link from 'next/link';
 
-// Make sure to call loadStripe outside of a component’s render to avoid
-// recreating the Stripe object on every render.
-// This is your test publishable API key.
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-
 export default function CheckoutPage() {
-    const [clientSecret, setClientSecret] = useState('');
-    const [orderId, setOrderId] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [restaurant, setRestaurant] = useState<any>(null);
     const [deliveryAddress, setDeliveryAddress] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const { items, cartTotal } = useCart();
 
     useEffect(() => {
@@ -32,10 +23,13 @@ export default function CheckoutPage() {
         }
     }, [items]);
 
-    useEffect(() => {
-        // Create PaymentIntent as soon as the page loads
-        if (items.length > 0) {
-            fetch('/api/create-payment-intent', {
+    const handlePayFastCheckout = async () => {
+        if (items.length === 0) return;
+        setIsLoading(true);
+        setErrorMsg(null);
+
+        try {
+            const res = await fetch('/api/payfast/initiate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
@@ -43,36 +37,21 @@ export default function CheckoutPage() {
                     amount: cartTotal,
                     deliveryAddress: deliveryAddress
                 }),
-            })
-                .then(async (res) => {
-                    const data = await res.json();
-                    if (!res.ok) {
-                        throw new Error(data.error || 'Failed to initialize checkout');
-                    }
-                    return data;
-                })
-                .then((data) => {
-                    setClientSecret(data.clientSecret);
-                    setOrderId(data.orderId);
-                    setErrorMsg(null);
-                })
-                .catch((err) => {
-                    console.error("Payment intent error:", err);
-                    setErrorMsg(err.message);
-                });
+            });
+
+            const data = await res.json();
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to initialize PayFast checkout');
+            }
+
+            // Redirect to PayFast
+            window.location.href = data.url;
+        } catch (err: any) {
+            console.error("PayFast checkout error:", err);
+            setErrorMsg(err.message);
+        } finally {
+            setIsLoading(false);
         }
-    }, [items, cartTotal]);
-
-    const appearance = {
-        theme: 'stripe' as const,
-        variables: {
-            colorPrimary: '#ff6b35', // Brand Orange
-        },
-    };
-
-    const options = {
-        clientSecret,
-        appearance,
     };
 
     if (items.length === 0) {
@@ -159,30 +138,68 @@ export default function CheckoutPage() {
                     </div>
                 </div>
 
-                {/* Right Column: Payment Form */}
+                {/* Right Column: Payment Details */}
                 <div className={styles.paymentSection}>
                     <h2 className={styles.sectionTitle}>Payment Details</h2>
-                    {errorMsg ? (
-                        <div className={styles.paymentError}>
+                    
+                    {errorMsg && (
+                        <div className={styles.paymentError} style={{ marginBottom: '1.5rem', color: '#e53e3e', fontSize: '0.9rem' }}>
                             <p><strong>Error:</strong> {errorMsg}</p>
-                            <button 
-                                className={styles.btnPrimary} 
-                                onClick={() => window.location.reload()}
-                                style={{ marginTop: '1rem' }}
-                            >
-                                Try Again
-                            </button>
-                        </div>
-                    ) : clientSecret ? (
-                        <Elements options={options} stripe={stripePromise}>
-                            <CheckoutForm orderId={orderId} />
-                        </Elements>
-                    ) : (
-                        <div className={styles.paymentLoading}>
-                            <div className={styles.spinner}></div>
-                            <p>Taking you to secure checkout...</p>
                         </div>
                     )}
+
+                    <div className={styles.payfastContainer} style={{ 
+                        background: '#f7fafc', 
+                        padding: '1.5rem', 
+                        borderRadius: '12px', 
+                        border: '1px solid #e2e8f0',
+                        textAlign: 'center'
+                    }}>
+                        <div style={{ marginBottom: '1.5rem' }}>
+                            <Image 
+                                src="https://www.payfast.co.za/wp-content/uploads/2022/04/PayFast-Logo-Color.svg" 
+                                alt="PayFast" 
+                                width={150} 
+                                height={40} 
+                                style={{ margin: '0 auto' }}
+                            />
+                        </div>
+                        
+                        <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
+                            Pay securely using your preferred local method including <strong>Instant EFT, Credit Card, or Capitec Pay</strong>.
+                        </p>
+
+                        <button 
+                            className={styles.btnPrimary} 
+                            onClick={handlePayFastCheckout}
+                            disabled={isLoading}
+                            style={{ 
+                                width: '100%', 
+                                padding: '1rem',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '10px'
+                            }}
+                        >
+                            {isLoading ? (
+                                <>
+                                    <div className={styles.spinner} style={{ width: '20px', height: '20px', borderTopColor: 'white' }}></div>
+                                    Redirecting...
+                                </>
+                            ) : (
+                                <>
+                                    Pay R {cartTotal.toFixed(2)} with PayFast
+                                </>
+                            )}
+                        </button>
+                    </div>
+
+                    <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+                        <p style={{ fontSize: '0.8rem', color: '#a0aec0' }}>
+                            You will be redirected to PayFast to complete your payment securely.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
