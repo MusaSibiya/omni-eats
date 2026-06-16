@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.omn.eats',
-  appName: 'Omni Eats',
+  appId: 'com.sotobe.eats',
+  appName: 'Sotobe Eats',
   webDir: 'public',
   server: {
     androidScheme: 'https',

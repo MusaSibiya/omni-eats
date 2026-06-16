@@ -55,6 +55,7 @@ next-env.d.ts
 !tsconfig.json
 !next.config.ts
 !eslint.config.mjs
+!public/manifest.json
 tmp_*
 check-*
 check_orders.js

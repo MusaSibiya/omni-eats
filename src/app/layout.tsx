@@ -23,18 +23,18 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Omni Eats | Premium Food Delivery",
-    template: "%s | Omni Eats",
+    default: "Sotobe Eats | Premium Food Delivery",
+    template: "%s | Sotobe Eats",
   },
   description: "Experience the future of dining. Premium restaurants delivered to your doorstep.",
   twitter: {
     card: "summary_large_image",
   },
   openGraph: {
-    title: "Omni Eats | Premium Food Delivery",
+    title: "Sotobe Eats | Premium Food Delivery",
     description: "Experience the future of dining. Premium restaurants delivered to your doorstep.",
     url: process.env.NEXT_PUBLIC_URL || "http://localhost:3000",
-    siteName: "Omni Eats",
+    siteName: "Sotobe Eats",
     locale: "en_US",
     type: "website",
   },
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Omni Eats",
+    title: "Sotobe Eats",
   },
   other: {
     "mobile-web-app-capable": "yes",
