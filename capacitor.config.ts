@@ -6,8 +6,8 @@ const config: CapacitorConfig = {
   webDir: 'public',
   server: {
     androidScheme: 'https',
-    url: 'http://192.168.1.11:3000',
-    cleartext: true
+    url: 'https://omni-eats-f8p8.vercel.app',
+    cleartext: false
   }
 };
 
