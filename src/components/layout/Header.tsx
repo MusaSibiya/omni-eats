@@ -4,8 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { handleSignOut } from '@/lib/actions';
+import { useSession, signOut } from 'next-auth/react';
 import styles from './Header.module.css';
 import { Button } from '@/components/ui/Button';
 import { CartDrawer } from '@/components/features/CartDrawer';
@@ -130,7 +129,7 @@ export const Header = ({ session: initialSession }: { session: Session | null })
                                 <span className={styles.userName}>{session.user?.name}</span>
                                 <button
                                     className={styles.signOutBtn}
-                                    onClick={() => handleSignOut()}
+                                    onClick={() => signOut({ callbackUrl: '/' })}
                                 >
                                     Sign Out
                                 </button>
@@ -162,7 +161,7 @@ export const Header = ({ session: initialSession }: { session: Session | null })
                             {session ? (
                                 <button
                                     className={styles.mobileSignOutBtn}
-                                    onClick={() => handleSignOut()}
+                                    onClick={() => signOut({ callbackUrl: '/' })}
                                 >
                                     Sign Out
                                 </button>
