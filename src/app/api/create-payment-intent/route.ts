@@ -3,9 +3,17 @@ import Stripe from 'stripe';
 import { auth } from '@/auth';
 import { prisma } from '@/lib/prisma';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    apiVersion: '2024-12-18.acacia' as any, // Use latest API version or default
-});
+// Lazy initialization for Stripe
+let stripe: Stripe | null = null;
+
+function getStripe() {
+    if (!stripe && process.env.STRIPE_SECRET_KEY) {
+        stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+            apiVersion: '2024-12-18.acacia' as any,
+        });
+    }
+    return stripe;
+}
 
 export async function POST(req: NextRequest) {
     try {
@@ -88,9 +96,15 @@ export async function POST(req: NextRequest) {
         console.log("Order created:", order.id);
 
         // 2. Create PaymentIntent linked to this Order
+        const stripeInstance = getStripe();
+        if (!stripeInstance) {
+            console.error("Stripe secret key missing");
+            return NextResponse.json({ error: 'Payment service not configured' }, { status: 500 });
+        }
+
         console.log("DEBUG: Creating Stripe PaymentIntent with Secret Key present:", !!process.env.STRIPE_SECRET_KEY);
         try {
-            const paymentIntent = await stripe.paymentIntents.create({
+            const paymentIntent = await stripeInstance.paymentIntents.create({
                 amount: Math.round(amount * 100),
                 currency: 'zar',
                 automatic_payment_methods: { enabled: true },

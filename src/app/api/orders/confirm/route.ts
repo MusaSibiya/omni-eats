@@ -2,13 +2,17 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
 
-if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is not configured in environment variables');
-}
+// Lazy initialization for Stripe
+let stripe: Stripe | null = null;
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-    apiVersion: '2024-12-18.acacia' as any,
-});
+function getStripe() {
+    if (!stripe && process.env.STRIPE_SECRET_KEY) {
+        stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+            apiVersion: '2024-12-18.acacia' as any,
+        });
+    }
+    return stripe;
+}
 
 export async function POST(req: NextRequest) {
     try {
@@ -21,11 +25,17 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Missing paymentIntentId' }, { status: 400 });
         }
 
+        const stripeInstance = getStripe();
+        if (!stripeInstance) {
+            console.error('Stripe secret key missing');
+            return NextResponse.json({ error: 'Payment service not configured' }, { status: 500 });
+        }
+
         // 1. Retrieve the PaymentIntent from Stripe to verify status
         console.log('Attempting to retrieve PaymentIntent from Stripe...');
         let paymentIntent;
         try {
-            paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+            paymentIntent = await stripeInstance.paymentIntents.retrieve(paymentIntentId);
             console.log('PaymentIntent retrieved:', {
                 id: paymentIntent.id,
                 status: paymentIntent.status,
