@@ -87,7 +87,7 @@ export default function LoginPage() {
                         </div>
                     </div>
 
-
+                    <p className={styles.subtitle}>Sign in to your account</p>
 
                     {showSuccess && (
                         <div className={styles.successMessage}>
