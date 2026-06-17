@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Footer } from '@/components/layout/Footer';
 import styles from './page.module.css';
 
 export default function RegisterRestaurantPage() {
@@ -107,6 +108,7 @@ export default function RegisterRestaurantPage() {
                     <p>Our team will review it and get back to you soon.</p>
                     <p className={styles.redirectText}>Redirecting to dashboard...</p>
                 </div>
+                <Footer />
             </div>
         );
     }
@@ -328,6 +330,7 @@ export default function RegisterRestaurantPage() {
                     </div>
                 </form>
             </div>
+            <Footer />
         </div>
     );
 }

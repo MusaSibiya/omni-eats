@@ -1,12 +1,15 @@
 .pageContainer {
     min-height: 100vh;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%), #0a0a0a;
-    padding: 4rem 2rem;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-primary);
+    padding-top: 100px;
+    padding-bottom: 4rem;
 }
 
 .successContainer {
     min-height: 100vh;
-    background: radial-gradient(circle at center, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.8) 100%), #0a0a0a;
+    background: var(--bg-primary);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,31 +19,32 @@
 .formContainer {
     max-width: 800px;
     margin: 0 auto;
-    background: white;
-    border-radius: 16px;
+    background: var(--surface-primary);
+    border-radius: 24px;
     padding: 3rem;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .formContainer h1 {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
-    color: #1a1a1a;
+    color: var(--text-primary);
 }
 
 .subtitle {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 2rem;
     font-size: 1.1rem;
 }
 
 .error {
-    background: #fee;
-    color: #c33;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: 12px;
     margin-bottom: 1.5rem;
-    border-left: 4px solid #c33;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .form {
@@ -50,7 +54,7 @@
 }
 
 .section {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border-color);
     padding-bottom: 2rem;
 }
 
@@ -61,11 +65,11 @@
 .section h2 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .sectionNote {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.9rem;
     margin-bottom: 1.5rem;
 }
@@ -78,18 +82,20 @@
 
 .formGroup label {
     font-weight: 600;
-    color: #333;
+    color: var(--text-secondary);
     font-size: 0.95rem;
 }
 
 .formGroup input,
 .formGroup textarea,
 .formGroup select {
-    padding: 0.75rem 1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
 }
 
 .formGroup input:focus,
@@ -97,7 +103,7 @@
 .formGroup select:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+    box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
 }
 
 .formGroup textarea {
@@ -120,8 +126,8 @@
 
 .btnPrimary,
 .btnSecondary {
-    padding: 0.875rem 2rem;
-    border-radius: 8px;
+    padding: 1rem 2rem;
+    border-radius: 12px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -145,22 +151,24 @@
 }
 
 .btnSecondary {
-    background: #f5f5f5;
-    color: #333;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
 }
 
 .btnSecondary:hover:not(:disabled) {
-    background: #e0e0e0;
+    background: var(--bg-primary);
 }
 
 /* Success State - Card styling */
 .successCard {
-    background: white;
-    border-radius: 16px;
+    background: var(--surface-primary);
+    border-radius: 24px;
     padding: 3rem;
     text-align: center;
     max-width: 500px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
 .successIcon {
@@ -179,11 +187,11 @@
 .successCard h1 {
     font-size: 2rem;
     margin-bottom: 1rem;
-    color: #1a1a1a;
+    color: var(--text-primary);
 }
 
 .successCard p {
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 0.75rem;
     font-size: 1.1rem;
 }
@@ -196,13 +204,13 @@
 
 /* Upload Zone Styles */
 .uploadZone {
-    border: 2px dashed #e0e0e0;
+    border: 2px dashed var(--border-color);
     border-radius: 12px;
     padding: 2.5rem 1.5rem;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #fafafa;
+    background: var(--bg-secondary);
     position: relative;
     overflow: hidden;
     display: flex;
@@ -222,12 +230,12 @@
 }
 
 .uploadText {
-    color: #333;
+    color: var(--text-primary);
     font-weight: 600;
 }
 
 .uploadSubtext {
-    color: #888;
+    color: var(--text-secondary);
     font-size: 0.85rem;
 }
 
@@ -270,7 +278,13 @@
     display: none;
 }
 
+/* Responsive Design */
 @media (max-width: 768px) {
+    .pageContainer {
+        padding-top: 80px;
+        padding-bottom: 2rem;
+    }
+
     .formContainer {
         padding: 2rem 1.5rem;
     }
@@ -288,3 +302,13 @@
         width: 100%;
     }
 }
+
+@media (max-width: 480px) {
+    .formContainer h1 {
+        font-size: 2rem;
+    }
+    .formContainer {
+        padding: 1.5rem;
+    }
+}
+
