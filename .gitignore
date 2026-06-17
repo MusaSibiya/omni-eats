@@ -41,6 +41,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Capacitor
+/android
+/ios
+
 /src/generated/prisma
 
 # database

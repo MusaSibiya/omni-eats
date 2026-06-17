@@ -32,6 +32,23 @@ async function main() {
         data: { email: 'admin@omni.com', name: 'Omni Admin', phone: '+27 81 555 0000', role: 'ADMIN', password: adminPassword }
     });
 
+    // Create Restaurant Owners
+    const sowetoOwner = await prisma.user.create({
+        data: { email: 'soweto@example.com', name: 'Soweto Gold Owner', phone: '+27 83 111 2222', role: 'USER', password: hashedPassword }
+    });
+
+    const maxsOwner = await prisma.user.create({
+        data: { email: 'maxs@example.com', name: 'Max\'s Lifestyle Owner', phone: '+27 83 333 4444', role: 'USER', password: hashedPassword }
+    });
+
+    const durbanOwner = await prisma.user.create({
+        data: { email: 'durban@example.com', name: 'Durban Curry House Owner', phone: '+27 83 555 6666', role: 'USER', password: hashedPassword }
+    });
+
+    const kotaOwner = await prisma.user.create({
+        data: { email: 'kota@example.com', name: 'The Kota Joint Owner', phone: '+27 83 777 8888', role: 'USER', password: hashedPassword }
+    });
+
     // Restaurant 1: Soweto Gold
     console.log('Creating restaurants and menu items...');
     const restaurant1 = await prisma.restaurant.create({
@@ -42,7 +59,9 @@ async function main() {
             deliveryTime: '30-45 min',
             cuisineType: 'Kasi / Traditional',
             dietaryOptions: 'Halal friendly',
-            imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80' // Wheat/Food texture
+            imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+            ownerId: sowetoOwner.id,
+            status: 'APPROVED'
         }
     });
 
@@ -64,7 +83,9 @@ async function main() {
             deliveryTime: '40-50 min',
             cuisineType: 'Shisa Nyama',
             dietaryOptions: 'Meat lovers',
-            imageUrl: 'https://images.unsplash.com/photo-1603073163308-9654c3fb70b9?auto=format&fit=crop&w=800&q=80' // Grilled Meat/Braai
+            imageUrl: 'https://images.unsplash.com/photo-1603073163308-9654c3fb70b9?auto=format&fit=crop&w=800&q=80',
+            ownerId: maxsOwner.id,
+            status: 'APPROVED'
         }
     });
 
@@ -86,7 +107,9 @@ async function main() {
             deliveryTime: '25-35 min',
             cuisineType: 'Indian / Durban',
             dietaryOptions: 'Vegetarian, Halal',
-            imageUrl: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80' // Curry
+            imageUrl: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+            ownerId: durbanOwner.id,
+            status: 'APPROVED'
         }
     });
 
@@ -108,7 +131,9 @@ async function main() {
             deliveryTime: '20-30 min',
             cuisineType: 'Fast Food',
             dietaryOptions: 'Cheese only',
-            imageUrl: 'https://images.unsplash.com/photo-1628840045768-45b79603595c?auto=format&fit=crop&w=800&q=80' // Fast food/Burger wrapper style
+            imageUrl: 'https://images.unsplash.com/photo-1628840045768-45b79603595c?auto=format&fit=crop&w=800&q=80',
+            ownerId: kotaOwner.id,
+            status: 'APPROVED'
         }
     });
 
@@ -122,8 +147,12 @@ async function main() {
 
 
     console.log('\n✅ Database seeded successfully with SA Content!');
-    console.log(`   Admin User:  admin@omni.com / admin123`);
-    console.log(`   Test User:   user@example.com / password123`);
+    console.log(`   Admin User:      admin@omni.com / admin123`);
+    console.log(`   Test User:       user@example.com / password123`);
+    console.log(`   Soweto Gold:     soweto@example.com / password123`);
+    console.log(`   Max's Lifestyle: maxs@example.com / password123`);
+    console.log(`   Durban Curry:    durban@example.com / password123`);
+    console.log(`   The Kota Joint:  kota@example.com / password123`);
 }
 
 main()
