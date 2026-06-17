@@ -88,19 +88,23 @@ export function RestaurantList({ restaurants }: RestaurantListProps) {
                     {filteredRestaurants.map((restaurant) => {
                         const { price, tags } = getDynamicDetails(restaurant);
 
-                        // Map seed names to real existing images in public/images
+                        // Map seed names to real existing images in public/images or use DB image
                         let imageSrc = '/images/restaurant-hero.png';
                         const name = restaurant.name;
 
-                        if (name === 'The Golden Plate') imageSrc = '/images/hero-salmon.png';
-                        else if (name === 'Sakura Sushi') imageSrc = '/images/hero-salmon.png'; // Fallback
+                        if (name === 'Soweto Gold') imageSrc = restaurant.imageUrl || '/images/turkey-bowl.png';
+                        else if (name === 'Max\'s Lifestyle') imageSrc = restaurant.imageUrl || '/images/hero-salmon.png';
+                        else if (name === 'Durban Curry House') imageSrc = restaurant.imageUrl || '/images/tomato-chicken.png';
+                        else if (name === 'The Kota Joint') imageSrc = restaurant.imageUrl || '/images/jalapeno-popper.png';
+                        else if (name === 'The Golden Plate') imageSrc = '/images/hero-salmon.png';
+                        else if (name === 'Sakura Sushi') imageSrc = '/images/hero-salmon.png';
                         else if (name === 'Burger & Co.') imageSrc = '/images/jalapeno-popper.png';
                         else if (name === 'Mzansi Flavors') imageSrc = '/images/turkey-bowl.png';
                         else if (name === 'Cape Malay Curry House') imageSrc = '/images/tomato-chicken.png';
                         else if (name === 'Lekker Bites') imageSrc = '/images/jalapeno-popper.png';
                         else if (name === 'Savanna Spice') imageSrc = '/images/corner-salad.png';
-                        else if (restaurant.imageUrl && !restaurant.imageUrl.includes('restaurant-')) {
-                            // Use DB image if provided and not one of the broken seed ones (restaurant-1.jpg etc)
+                        else if (restaurant.imageUrl) {
+                            // Use DB image if provided
                             imageSrc = restaurant.imageUrl;
                         }
 
