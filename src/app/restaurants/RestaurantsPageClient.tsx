@@ -42,6 +42,8 @@ export default function RestaurantsPageClient({ restaurants }: RestaurantsPagePr
                             fill
                             className={`${styles.heroImage} ${index === currentSlide ? styles.active : ''}`}
                             priority={index === 0}
+                            quality={100}
+                            sizes="100vw"
                         />
                     ))}
 

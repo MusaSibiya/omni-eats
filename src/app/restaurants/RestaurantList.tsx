@@ -116,7 +116,7 @@ export function RestaurantList({ restaurants }: RestaurantListProps) {
                                         alt={restaurant.name || 'Restaurant'}
                                         fill
                                         className={styles.cardImage}
-                                        quality={95}
+                                        quality={100}
                                         sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, (max-width: 1399px) 33vw, (max-width: 1799px) 25vw, 20vw"
                                     />
                                 </div>
