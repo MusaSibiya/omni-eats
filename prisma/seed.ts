@@ -59,7 +59,7 @@ async function main() {
             deliveryTime: '30-45 min',
             cuisineType: 'Kasi / Traditional',
             dietaryOptions: 'Halal friendly',
-            imageUrl: 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?auto=format&fit=crop&w=800&q=80',
+            imageUrl: '/images/turkey-bowl.png',
             ownerId: sowetoOwner.id,
             status: 'APPROVED'
         }
@@ -83,7 +83,7 @@ async function main() {
             deliveryTime: '40-50 min',
             cuisineType: 'Shisa Nyama',
             dietaryOptions: 'Meat lovers',
-            imageUrl: 'https://images.unsplash.com/photo-1603073163308-9654c3fb70b9?auto=format&fit=crop&w=800&q=80',
+            imageUrl: '/images/hero-salmon.png',
             ownerId: maxsOwner.id,
             status: 'APPROVED'
         }
@@ -107,7 +107,7 @@ async function main() {
             deliveryTime: '25-35 min',
             cuisineType: 'Indian / Durban',
             dietaryOptions: 'Vegetarian, Halal',
-            imageUrl: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?auto=format&fit=crop&w=800&q=80',
+            imageUrl: '/images/tomato-chicken.png',
             ownerId: durbanOwner.id,
             status: 'APPROVED'
         }
@@ -131,7 +131,7 @@ async function main() {
             deliveryTime: '20-30 min',
             cuisineType: 'Fast Food',
             dietaryOptions: 'Cheese only',
-            imageUrl: 'https://images.unsplash.com/photo-1628840045768-45b79603595c?auto=format&fit=crop&w=800&q=80',
+            imageUrl: '/images/jalapeno-popper.png',
             ownerId: kotaOwner.id,
             status: 'APPROVED'
         }
