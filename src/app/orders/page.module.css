@@ -25,20 +25,20 @@
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 0 20px;
     position: relative;
     z-index: 1;
 }
 
 .backBtn {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .pageHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
 }
 
 .title {
