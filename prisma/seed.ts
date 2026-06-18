@@ -34,19 +34,19 @@ async function main() {
 
     // Create Restaurant Owners
     const sowetoOwner = await prisma.user.create({
-        data: { email: 'soweto@example.com', name: 'Soweto Gold Owner', phone: '+27 83 111 2222', role: 'USER', password: hashedPassword }
+        data: { email: 'soweto@example.com', name: 'Soweto Gold Owner', phone: '+27 83 111 2222', role: 'RESTAURANT_OWNER', password: hashedPassword }
     });
 
     const maxsOwner = await prisma.user.create({
-        data: { email: 'maxs@example.com', name: 'Max\'s Lifestyle Owner', phone: '+27 83 333 4444', role: 'USER', password: hashedPassword }
+        data: { email: 'maxs@example.com', name: 'Max\'s Lifestyle Owner', phone: '+27 83 333 4444', role: 'RESTAURANT_OWNER', password: hashedPassword }
     });
 
     const durbanOwner = await prisma.user.create({
-        data: { email: 'durban@example.com', name: 'Durban Curry House Owner', phone: '+27 83 555 6666', role: 'USER', password: hashedPassword }
+        data: { email: 'durban@example.com', name: 'Durban Curry House Owner', phone: '+27 83 555 6666', role: 'RESTAURANT_OWNER', password: hashedPassword }
     });
 
     const kotaOwner = await prisma.user.create({
-        data: { email: 'kota@example.com', name: 'The Kota Joint Owner', phone: '+27 83 777 8888', role: 'USER', password: hashedPassword }
+        data: { email: 'kota@example.com', name: 'The Kota Joint Owner', phone: '+27 83 777 8888', role: 'RESTAURANT_OWNER', password: hashedPassword }
     });
 
     // Create a Driver User
