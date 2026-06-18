@@ -3,6 +3,7 @@ import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
 import { Footer } from '@/components/layout/Footer';
 import OrderTrackerClient from './OrderTrackerClient';
+import styles from './page.module.css';
 
 export default async function OrderTrackingPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
@@ -36,8 +37,10 @@ export default async function OrderTrackingPage(props: { params: Promise<{ id: s
     const sanitizedOrder = JSON.parse(JSON.stringify(order));
 
     return (
-        <main style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-secondary)' }}>
-            <OrderTrackerClient order={sanitizedOrder} />
+        <main className={styles.main}>
+            <div className={styles.container}>
+                <OrderTrackerClient order={sanitizedOrder} />
+            </div>
             <div style={{ marginTop: 'auto' }}>
                 <Footer />
             </div>
