@@ -2,8 +2,25 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding-top: 50px;
+    position: relative;
+    overflow: hidden;
+}
+
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: var(--bg-primary);
-    padding-top: 100px;
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .successWrapper {
@@ -43,11 +60,13 @@
     margin: 0 auto;
     padding: 2rem;
     width: 100%;
+    position: relative;
+    z-index: 10;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
 }
 
 .title {

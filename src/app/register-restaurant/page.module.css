@@ -1,40 +1,83 @@
-.pageContainer {
+.main {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-primary);
-    padding-top: 100px;
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding-top: 50px;
     padding-bottom: 4rem;
+    position: relative;
+    overflow: hidden;
 }
 
-.successContainer {
-    min-height: 100vh;
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
+}
+
+.successWrapper {
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 2rem;
 }
 
-.formContainer {
-    max-width: 800px;
-    margin: 0 auto;
+.successCard {
     background: var(--surface-primary);
+    padding: 4rem;
     border-radius: 24px;
-    padding: 3rem;
+    text-align: center;
+    max-width: 500px;
     border: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.formContainer h1 {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
+.successIcon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+}
+
+.successTitle {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.successText {
+    color: var(--text-secondary);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
 }
 
 .subtitle {
     color: var(--text-secondary);
-    margin-bottom: 2rem;
     font-size: 1.1rem;
 }
 
@@ -43,29 +86,41 @@
     color: #ef4444;
     padding: 1rem;
     border-radius: 12px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
     border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.formCard {
+    background: var(--surface-primary);
+    padding: 3rem;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
 }
 
 .section {
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 2rem;
+    margin-bottom: 1.5rem;
 }
 
 .section:last-of-type {
     border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
-.section h2 {
+.sectionTitle {
     font-size: 1.5rem;
+    font-weight: 700;
     margin-bottom: 0.5rem;
-    color: var(--text-primary);
 }
 
 .sectionNote {
@@ -80,35 +135,36 @@
     gap: 0.5rem;
 }
 
-.formGroup label {
+.label {
     font-weight: 600;
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    font-size: 0.95rem;
 }
 
-.formGroup input,
-.formGroup textarea,
-.formGroup select {
+.input,
+.textarea,
+.select {
+    width: 100%;
     padding: 1rem;
-    border: 1px solid var(--border-color);
     border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.2s ease;
+    border: 1px solid var(--border-color);
     background: var(--bg-secondary);
     color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.2s;
 }
 
-.formGroup input:focus,
-.formGroup textarea:focus,
-.formGroup select:focus {
+.textarea {
+    resize: vertical;
+    min-height: 120px;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
-}
-
-.formGroup textarea {
-    resize: vertical;
-    min-height: 100px;
 }
 
 .formRow {
@@ -121,88 +177,49 @@
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.submitBtn,
+.secondaryBtn {
+    width: 100%;
+    padding: 1.25rem;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
     margin-top: 1rem;
 }
 
-.btnPrimary,
-.btnSecondary {
-    padding: 1rem 2rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-}
-
-.btnPrimary {
+.submitBtn {
     background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
     color: white;
+    box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
 }
 
-.btnPrimary:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 107, 53, 0.4);
-}
-
-.btnPrimary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-}
-
-.btnSecondary {
+.secondaryBtn {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
 }
 
-.btnSecondary:hover:not(:disabled) {
+.submitBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(255, 107, 53, 0.4);
+}
+
+.secondaryBtn:hover:not(:disabled) {
     background: var(--bg-primary);
 }
 
-/* Success State - Card styling */
-.successCard {
-    background: var(--surface-primary);
-    border-radius: 24px;
-    padding: 3rem;
-    text-align: center;
-    max-width: 500px;
-    border: 1px solid var(--border-color);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+.submitBtn:disabled,
+.secondaryBtn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
-.successIcon {
-    width: 80px;
-    height: 80px;
-    background: linear-gradient(135deg, var(--accent-primary), #E85D2A);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    margin: 0 auto 1.5rem;
-}
-
-.successCard h1 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
-}
-
-.successCard p {
-    color: var(--text-secondary);
-    margin-bottom: 0.75rem;
-    font-size: 1.1rem;
-}
-
-.redirectText {
-    color: var(--accent-primary);
-    font-weight: 600;
-    margin-top: 1.5rem;
-}
-
-/* Upload Zone Styles */
 .uploadZone {
     border: 2px dashed var(--border-color);
     border-radius: 12px;
@@ -211,8 +228,6 @@
     cursor: pointer;
     transition: all 0.3s ease;
     background: var(--bg-secondary);
-    position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -280,13 +295,24 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .pageContainer {
+    .main {
         padding-top: 80px;
-        padding-bottom: 2rem;
     }
 
-    .formContainer {
+    .container {
+        padding: 1rem;
+    }
+
+    .title {
+        font-size: 2.25rem;
+    }
+
+    .formCard {
         padding: 2rem 1.5rem;
+    }
+
+    .successCard {
+        padding: 3rem 1.5rem;
     }
 
     .formRow {
@@ -296,19 +322,21 @@
     .formActions {
         flex-direction: column;
     }
-
-    .btnPrimary,
-    .btnSecondary {
-        width: 100%;
-    }
 }
 
 @media (max-width: 480px) {
-    .formContainer h1 {
-        font-size: 2rem;
+    .title {
+        font-size: 1.75rem;
     }
-    .formContainer {
-        padding: 1.5rem;
+
+    .subtitle {
+        font-size: 1rem;
+    }
+
+    .submitBtn,
+    .secondaryBtn {
+        padding: 1rem;
+        font-size: 1rem;
     }
 }
 

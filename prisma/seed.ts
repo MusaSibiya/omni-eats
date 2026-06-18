@@ -49,6 +49,11 @@ async function main() {
         data: { email: 'kota@example.com', name: 'The Kota Joint Owner', phone: '+27 83 777 8888', role: 'USER', password: hashedPassword }
     });
 
+    // Create a Driver User
+    const driver = await prisma.user.create({
+        data: { email: 'driver@example.com', name: 'Sipho the Driver', phone: '+27 84 111 2222', role: 'DRIVER', password: hashedPassword }
+    });
+
     // Restaurant 1: Soweto Gold
     console.log('Creating restaurants and menu items...');
     const restaurant1 = await prisma.restaurant.create({
@@ -153,6 +158,7 @@ async function main() {
     console.log(`   Max's Lifestyle: maxs@example.com / password123`);
     console.log(`   Durban Curry:    durban@example.com / password123`);
     console.log(`   The Kota Joint:  kota@example.com / password123`);
+    console.log(`   Driver:          driver@example.com / password123`);
 }
 
 main()

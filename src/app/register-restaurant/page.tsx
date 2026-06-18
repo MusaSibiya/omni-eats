@@ -6,107 +6,71 @@ import { useSession } from 'next-auth/react';
 import { Footer } from '@/components/layout/Footer';
 import styles from './page.module.css';
 
+// Mock function - replace with your actual registerRestaurant function
+const registerRestaurant = async (formData: FormData) => {
+    // Simulate API call
+    return new Promise<{ success: boolean }>((resolve) => {
+        setTimeout(() => {
+            resolve({ success: true });
+        }, 1500);
+    });
+};
+
 export default function RegisterRestaurantPage() {
     const router = useRouter();
-    const { data: session } = useSession();
+    const { data: session, update } = useSession();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
-    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-    const [formData, setFormData] = useState({
-        restaurantName: '',
-        description: '',
-        cuisineType: '',
-        dietaryOptions: '',
-        deliveryTime: '30-45 min',
-        // Owner details (only if not logged in)
-        ownerName: session?.user?.name || '',
-        ownerEmail: session?.user?.email || '',
-        ownerPhone: '',
-        ownerPassword: '',
-        ownerConfirmPassword: ''
-    });
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            setSelectedFile(file);
-            const url = URL.createObjectURL(file);
-            setPreviewUrl(url);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
         }
     };
 
-    const removeImage = (e: React.MouseEvent) => {
-        e.stopPropagation();
-        setSelectedFile(null);
-        setPreviewUrl(null);
+    const removeImage = () => {
+        setImagePreview(null);
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError('');
 
-        if (!selectedFile) {
-            setError('Please upload a high-quality restaurant image.');
-            setLoading(false);
-            return;
-        }
-
-        if (!session && formData.ownerPassword !== formData.ownerConfirmPassword) {
-            setError('Passwords do not match.');
-            setLoading(false);
-            return;
-        }
-
         try {
-            const dataToSend = new FormData();
-            Object.entries(formData).forEach(([key, value]) => {
-                dataToSend.append(key, value);
-            });
-            dataToSend.append('image', selectedFile);
-
-            const response = await fetch('/api/restaurants/register', {
-                method: 'POST',
-                body: dataToSend
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Registration failed');
+            const formData = new FormData(e.currentTarget);
+            const res = await registerRestaurant(formData);
+            if (res.success) {
+                setSuccess(true);
+                setTimeout(() => {
+                    router.push('/login?message=Restaurant+application+submitted');
+                }, 2000);
             }
-
-            setSuccess(true);
-            setTimeout(() => {
-                router.push('/restaurant-dashboard');
-            }, 2000);
-
         } catch (err: any) {
-            setError(err.message);
+            setError(err.message || 'Something went wrong');
         } finally {
             setLoading(false);
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        setFormData(prev => ({
-            ...prev,
-            [e.target.name]: e.target.value
-        }));
-    };
-
     if (success) {
         return (
-            <div className={styles.successContainer}>
-                <div className={styles.successCard}>
-                    <div className={styles.successIcon}>✓</div>
-                    <h1>Application Submitted!</h1>
-                    <p>Your restaurant application has been submitted successfully.</p>
-                    <p>Our team will review it and get back to you soon.</p>
-                    <p className={styles.redirectText}>Redirecting to dashboard...</p>
+            <div className={styles.main}>
+                <div className={styles.successWrapper}>
+                    <div className={styles.successCard}>
+                        <div className={styles.successIcon}>🍽️</div>
+                        <h1 className={styles.successTitle}>Welcome to Sotobe Eats!</h1>
+                        <p className={styles.successText}>
+                            Your restaurant application has been received. We'll review it and be in touch soon!
+                        </p>
+                    </div>
                 </div>
                 <Footer />
             </div>
@@ -114,223 +78,184 @@ export default function RegisterRestaurantPage() {
     }
 
     return (
-        <div className={styles.pageContainer}>
-            <div className={styles.formContainer}>
-                <h1>Register Your Restaurant</h1>
-                <p className={styles.subtitle}>Join Sotobe Eats and reach thousands of customers</p>
+        <div className={styles.main}>
+            <div className={styles.container}>
+                <div className={styles.header}>
+                    <h1 className={styles.title}>Register Your Restaurant</h1>
+                    <p className={styles.subtitle}>Join Sotobe Eats and reach thousands of customers in your city.</p>
+                </div>
 
-                {error && <div className={styles.error}>{error}</div>}
+                {error && (
+                    <div className={styles.error}>
+                        {error}
+                    </div>
+                )}
 
-                <form onSubmit={handleSubmit} className={styles.form}>
-                    {/* Restaurant Details Section */}
-                    <section className={styles.section}>
-                        <h2>Restaurant Information</h2>
+                <div className={styles.formCard}>
+                    <form onSubmit={handleSubmit} className={styles.form}>
 
-                        <div className={styles.formGroup}>
-                            <label htmlFor="restaurantName">Restaurant Name *</label>
-                            <input
-                                type="text"
-                                id="restaurantName"
-                                name="restaurantName"
-                                value={formData.restaurantName}
-                                onChange={handleChange}
-                                required
-                                placeholder="e.g., Soweto Gold"
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label htmlFor="description">Description</label>
-                            <textarea
-                                id="description"
-                                name="description"
-                                value={formData.description}
-                                onChange={handleChange}
-                                rows={4}
-                                placeholder="Tell customers about your restaurant..."
-                            />
-                        </div>
-
-                        <div className={styles.formRow}>
-                            <div className={styles.formGroup}>
-                                <label htmlFor="cuisineType">Cuisine Type *</label>
-                                <select
-                                    id="cuisineType"
-                                    name="cuisineType"
-                                    value={formData.cuisineType}
-                                    onChange={handleChange}
-                                    required
-                                >
-                                    <option value="">Select cuisine type</option>
-                                    <option value="Kasi / Traditional">Kasi / Traditional</option>
-                                    <option value="Shisa Nyama">Shisa Nyama</option>
-                                    <option value="Indian / Durban">Indian / Durban</option>
-                                    <option value="Fast Food">Fast Food</option>
-                                    <option value="Italian">Italian</option>
-                                    <option value="Chinese">Chinese</option>
-                                    <option value="African">African</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                            </div>
+                        {/* Restaurant Information Section */}
+                        <div className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Restaurant Information</h2>
+                            <p className={styles.sectionNote}>Let us know the basics about your restaurant</p>
 
                             <div className={styles.formGroup}>
-                                <label htmlFor="deliveryTime">Delivery Time</label>
+                                <label className={styles.label}>Restaurant Name *</label>
                                 <input
+                                    className={styles.input}
                                     type="text"
-                                    id="deliveryTime"
-                                    name="deliveryTime"
-                                    value={formData.deliveryTime}
-                                    onChange={handleChange}
-                                    placeholder="e.g., 30-45 min"
+                                    name="name"
+                                    placeholder="e.g., Soweto Gold"
+                                    required
                                 />
                             </div>
-                        </div>
 
-                        <div className={styles.formGroup}>
-                            <label htmlFor="dietaryOptions">Dietary Options</label>
-                            <input
-                                type="text"
-                                id="dietaryOptions"
-                                name="dietaryOptions"
-                                value={formData.dietaryOptions}
-                                onChange={handleChange}
-                                placeholder="e.g., Halal, Vegetarian, Vegan (comma-separated)"
-                            />
-                        </div>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Description</label>
+                                <textarea
+                                    className={styles.textarea}
+                                    name="description"
+                                    placeholder="Tell customers about your restaurant..."
+                                />
+                            </div>
 
-                        <div className={styles.formGroup}>
-                            <label>Restaurant Image *</label>
-                            <div
-                                className={styles.uploadZone}
-                                onClick={() => document.getElementById('imageInput')?.click()}
-                            >
-                                {previewUrl ? (
+                            <div className={styles.formRow}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Cuisine Type *</label>
+                                    <select className={styles.select} name="cuisineType" required>
+                                        <option value="">Select cuisine type</option>
+                                        <option value="Kasi / Traditional">Kasi / Traditional</option>
+                                        <option value="Shisa Nyama">Shisa Nyama</option>
+                                        <option value="Indian / Durban">Indian / Durban</option>
+                                        <option value="Fast Food">Fast Food</option>
+                                        <option value="Fine Dining">Fine Dining</option>
+                                        <option value="Cafe">Cafe</option>
+                                    </select>
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Delivery Time</label>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        name="deliveryTime"
+                                        placeholder="30-45 min"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Dietary Options</label>
+                                <input
+                                    className={styles.input}
+                                    type="text"
+                                    name="dietaryOptions"
+                                    placeholder="e.g., Vegetarian, Halal friendly"
+                                />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Restaurant Image</label>
+                                {imagePreview ? (
                                     <div className={styles.imagePreview}>
-                                        <img src={previewUrl} alt="Preview" className={styles.previewImage} />
-                                        <button
-                                            type="button"
-                                            className={styles.removeImage}
-                                            onClick={removeImage}
-                                            title="Remove image"
-                                        >
-                                            ✕
+                                        <img src={imagePreview} alt="Preview" className={styles.previewImage} />
+                                        <button type="button" onClick={removeImage} className={styles.removeImage}>
+                                            ×
                                         </button>
                                     </div>
                                 ) : (
-                                    <>
-                                        <div className={styles.uploadIcon}>📸</div>
-                                        <div className={styles.uploadText}>Select from Gallery</div>
-                                        <div className={styles.uploadSubtext}>High-quality JPG, PNG or WEBP (Max 5MB)</div>
-                                    </>
+                                    <label className={styles.uploadZone}>
+                                        <div className={styles.uploadIcon}>�</div>
+                                        <div className={styles.uploadText}>Upload Restaurant Image</div>
+                                        <div className={styles.uploadSubtext}>Click to browse or drag and drop</div>
+                                        <input
+                                            type="file"
+                                            name="image"
+                                            accept="image/*"
+                                            className={styles.hiddenInput}
+                                            onChange={handleImageChange}
+                                        />
+                                    </label>
                                 )}
+                            </div>
+                        </div>
+
+                        {/* Contact Information Section */}
+                        <div className={styles.section}>
+                            <h2 className={styles.sectionTitle}>Contact Information</h2>
+                            <p className={styles.sectionNote}>Let us know how to reach you</p>
+
+                            {session ? (
+                                <div style={{ textAlign: 'center', padding: '1.5rem 0' }}>
+                                    <h3 style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>
+                                        Hey, {session.user?.name}!
+                                    </h3>
+                                    <p style={{ color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                                        We'll use your existing account details.
+                                    </p>
+                                    <input type="hidden" name="email" value={session.user?.email || ''} />
+                                    <input type="hidden" name="name" value={session.user?.name || ''} />
+                                </div>
+                            ) : (
+                                <>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Your Name *</label>
+                                        <input
+                                            className={styles.input}
+                                            type="text"
+                                            name="ownerName"
+                                            placeholder="John Doe"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Email Address *</label>
+                                        <input
+                                            className={styles.input}
+                                            type="email"
+                                            name="email"
+                                            placeholder="owner@restaurant.com"
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Phone Number *</label>
+                                        <input
+                                            className={styles.input}
+                                            type="tel"
+                                            name="phone"
+                                            placeholder="+27 12 345 6789"
+                                            required
+                                        />
+                                    </div>
+                                </>
+                            )}
+
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Restaurant Address</label>
                                 <input
-                                    type="file"
-                                    id="imageInput"
-                                    accept="image/*"
-                                    className={styles.hiddenInput}
-                                    onChange={handleFileChange}
+                                    className={styles.input}
+                                    type="text"
+                                    name="address"
+                                    placeholder="123 Main Street, Johannesburg"
                                 />
                             </div>
                         </div>
-                    </section>
 
-                    {/* Owner Details Section (only if not logged in) */}
-                    {!session && (
-                        <section className={styles.section}>
-                            <h2>Owner Information</h2>
-                            <p className={styles.sectionNote}>Create your account to manage your restaurant</p>
-
-                            <div className={styles.formGroup}>
-                                <label htmlFor="ownerName">Full Name *</label>
-                                <input
-                                    type="text"
-                                    id="ownerName"
-                                    name="ownerName"
-                                    value={formData.ownerName}
-                                    onChange={handleChange}
-                                    required
-                                    placeholder="Your full name"
-                                />
-                            </div>
-
-                            <div className={styles.formRow}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="ownerEmail">Email *</label>
-                                    <input
-                                        type="email"
-                                        id="ownerEmail"
-                                        name="ownerEmail"
-                                        value={formData.ownerEmail}
-                                        onChange={handleChange}
-                                        required
-                                        placeholder="your@email.com"
-                                    />
-                                </div>
-
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="ownerPhone">Phone Number</label>
-                                    <input
-                                        type="tel"
-                                        id="ownerPhone"
-                                        name="ownerPhone"
-                                        value={formData.ownerPhone}
-                                        onChange={handleChange}
-                                        placeholder="+27 XX XXX XXXX"
-                                    />
-                                </div>
-                            </div>
-
-                            <div className={styles.formRow}>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="ownerPassword">Password *</label>
-                                    <input
-                                        type="password"
-                                        id="ownerPassword"
-                                        name="ownerPassword"
-                                        value={formData.ownerPassword}
-                                        onChange={handleChange}
-                                        required
-                                        minLength={6}
-                                        placeholder="Minimum 6 characters"
-                                    />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label htmlFor="ownerConfirmPassword">Confirm Password *</label>
-                                    <input
-                                        type="password"
-                                        id="ownerConfirmPassword"
-                                        name="ownerConfirmPassword"
-                                        value={formData.ownerConfirmPassword}
-                                        onChange={handleChange}
-                                        required
-                                        minLength={6}
-                                        placeholder="Confirm your password"
-                                    />
-                                </div>
-                            </div>
-                        </section>
-                    )}
-
-                    <div className={styles.formActions}>
-                        <button
-                            type="button"
-                            onClick={() => router.back()}
-                            className={styles.btnSecondary}
-                            disabled={loading}
-                        >
-                            Cancel
-                        </button>
                         <button
                             type="submit"
-                            className={styles.btnPrimary}
+                            className={styles.submitBtn}
                             disabled={loading}
                         >
                             {loading ? 'Submitting...' : 'Submit Application'}
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
             <Footer />
         </div>
     );
 }
+
