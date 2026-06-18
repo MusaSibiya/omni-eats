@@ -8,6 +8,7 @@
     background-attachment: fixed;
     position: relative;
     overflow: hidden;
+    padding-top: 40px;
 }
 
 .main::before {
@@ -26,4 +27,5 @@
     position: relative;
     z-index: 1;
     width: 100%;
+    padding: 0 20px;
 }

@@ -29,8 +29,8 @@
     position: relative;
     background: #0a0a0a;
     color: white;
-    padding: 100px 0 80px;
-    margin-bottom: 60px;
+    padding: 60px 0 40px;
+    margin-bottom: 40px;
     overflow: hidden;
     z-index: 1;
 }
