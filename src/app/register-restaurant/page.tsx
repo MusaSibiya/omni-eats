@@ -99,15 +99,27 @@ export default function RegisterRestaurantPage() {
                             <h2 className={styles.sectionTitle}>Restaurant Information</h2>
                             <p className={styles.sectionNote}>Let us know the basics about your restaurant</p>
 
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Restaurant Name *</label>
-                                <input
-                                    className={styles.input}
-                                    type="text"
-                                    name="name"
-                                    placeholder="e.g., Soweto Gold"
-                                    required
-                                />
+                            <div className={styles.formRow}>
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Restaurant Name *</label>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        name="name"
+                                        placeholder="e.g., Soweto Gold"
+                                        required
+                                    />
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Dietary Options</label>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        name="dietaryOptions"
+                                        placeholder="e.g., Vegetarian, Halal friendly"
+                                    />
+                                </div>
                             </div>
 
                             <div className={styles.formGroup}>
@@ -142,16 +154,6 @@ export default function RegisterRestaurantPage() {
                                         placeholder="30-45 min"
                                     />
                                 </div>
-                            </div>
-
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Dietary Options</label>
-                                <input
-                                    className={styles.input}
-                                    type="text"
-                                    name="dietaryOptions"
-                                    placeholder="e.g., Vegetarian, Halal friendly"
-                                />
                             </div>
 
                             <div className={styles.formGroup}>
@@ -198,50 +200,66 @@ export default function RegisterRestaurantPage() {
                                 </div>
                             ) : (
                                 <>
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Your Name *</label>
-                                        <input
-                                            className={styles.input}
-                                            type="text"
-                                            name="ownerName"
-                                            placeholder="John Doe"
-                                            required
-                                        />
+                                    <div className={styles.formRow}>
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>Your Name *</label>
+                                            <input
+                                                className={styles.input}
+                                                type="text"
+                                                name="ownerName"
+                                                placeholder="John Doe"
+                                                required
+                                            />
+                                        </div>
+
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>Email Address *</label>
+                                            <input
+                                                className={styles.input}
+                                                type="email"
+                                                name="email"
+                                                placeholder="owner@restaurant.com"
+                                                required
+                                            />
+                                        </div>
                                     </div>
 
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Email Address *</label>
-                                        <input
-                                            className={styles.input}
-                                            type="email"
-                                            name="email"
-                                            placeholder="owner@restaurant.com"
-                                            required
-                                        />
-                                    </div>
+                                    <div className={styles.formRow}>
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>Phone Number *</label>
+                                            <input
+                                                className={styles.input}
+                                                type="tel"
+                                                name="phone"
+                                                placeholder="+27 12 345 6789"
+                                                required
+                                            />
+                                        </div>
 
-                                    <div className={styles.formGroup}>
-                                        <label className={styles.label}>Phone Number *</label>
-                                        <input
-                                            className={styles.input}
-                                            type="tel"
-                                            name="phone"
-                                            placeholder="+27 12 345 6789"
-                                            required
-                                        />
+                                        <div className={styles.formGroup}>
+                                            <label className={styles.label}>Restaurant Address</label>
+                                            <input
+                                                className={styles.input}
+                                                type="text"
+                                                name="address"
+                                                placeholder="123 Main Street, Johannesburg"
+                                            />
+                                        </div>
                                     </div>
                                 </>
                             )}
 
-                            <div className={styles.formGroup}>
-                                <label className={styles.label}>Restaurant Address</label>
-                                <input
-                                    className={styles.input}
-                                    type="text"
-                                    name="address"
-                                    placeholder="123 Main Street, Johannesburg"
-                                />
-                            </div>
+                            {session && (
+                                <div className={styles.formGroup}>
+                                    <label className={styles.label}>Restaurant Address</label>
+                                    <input
+                                        className={styles.input}
+                                        type="text"
+                                        name="address"
+                                        placeholder="123 Main Street, Johannesburg"
+                                    />
+                                </div>
+                            )}
                         </div>
 
                         <button

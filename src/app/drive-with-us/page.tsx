@@ -107,37 +107,43 @@ export default function DriveWithUsPage() {
                             </div>
                         ) : (
                             <>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Full Name</label>
-                                    <input className={styles.input} type="text" name="name" placeholder="John Doe" required />
+                                <div className={styles.formRow}>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Full Name</label>
+                                        <input className={styles.input} type="text" name="name" placeholder="John Doe" required />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Email Address</label>
+                                        <input className={styles.input} type="email" name="email" placeholder="john@example.com" required />
+                                    </div>
                                 </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Email Address</label>
-                                    <input className={styles.input} type="email" name="email" placeholder="john@example.com" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Password</label>
-                                    <input className={styles.input} type="password" name="password" placeholder="••••••••" required />
-                                </div>
-                                <div className={styles.formGroup}>
-                                    <label className={styles.label}>Confirm Password</label>
-                                    <input className={styles.input} type="password" name="confirmPassword" placeholder="••••••••" required />
+                                <div className={styles.formRow}>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Password</label>
+                                        <input className={styles.input} type="password" name="password" placeholder="••••••••" required />
+                                    </div>
+                                    <div className={styles.formGroup}>
+                                        <label className={styles.label}>Confirm Password</label>
+                                        <input className={styles.input} type="password" name="confirmPassword" placeholder="••••••••" required />
+                                    </div>
                                 </div>
                             </>
                         )}
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Vehicle Type</label>
-                            <select className={styles.input} name="vehicleType" required>
-                                <option value="BICYCLE">Bicycle</option>
-                                <option value="MOTORBIKE">Motorbike / Scooter</option>
-                                <option value="CAR">Car</option>
-                            </select>
-                        </div>
+                        <div className={styles.formRow}>
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Vehicle Type</label>
+                                <select className={styles.input} name="vehicleType" required>
+                                    <option value="BICYCLE">Bicycle</option>
+                                    <option value="MOTORBIKE">Motorbike / Scooter</option>
+                                    <option value="CAR">Car</option>
+                                </select>
+                            </div>
 
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>Phone Number</label>
-                            <input className={styles.input} type="tel" name="phone" placeholder="+27 12 345 6789" required />
+                            <div className={styles.formGroup}>
+                                <label className={styles.label}>Phone Number</label>
+                                <input className={styles.input} type="tel" name="phone" placeholder="+27 12 345 6789" required />
+                            </div>
                         </div>
 
                         <button 

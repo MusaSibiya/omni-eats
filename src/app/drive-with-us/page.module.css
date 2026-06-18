@@ -56,7 +56,7 @@
 }
 
 .container {
-    max-width: 600px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
     width: 100%;
@@ -148,6 +148,12 @@
     box-shadow: 0 0 0 2px rgba(255, 107, 53, 0.2);
 }
 
+.formRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
 .submitBtn {
     width: 100%;
     padding: 1.25rem;
@@ -194,6 +200,10 @@
 
     .successCard {
         padding: 3rem 1.5rem;
+    }
+
+    .formRow {
+        grid-template-columns: 1fr;
     }
 }
 

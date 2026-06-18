@@ -2,7 +2,26 @@
 
 .main {
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+}
+
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
 }
 
 /* Dark Hero Section */
@@ -13,6 +32,7 @@
     padding: 100px 0 80px;
     margin-bottom: 60px;
     overflow: hidden;
+    z-index: 1;
 }
 
 .heroContent {
@@ -97,6 +117,8 @@
     max-width: 1600px;
     margin: 0 auto;
     padding: 0 40px 80px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Search */
