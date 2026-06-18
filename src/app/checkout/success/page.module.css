@@ -1,9 +1,26 @@
 .pageWrapper {
     min-height: 100vh;
-    background: var(--bg-tertiary);
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
     /* Dark/Light Theme Support */
     display: flex;
     flex-direction: column;
+}
+
+.pageWrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .successCard {
@@ -16,6 +33,8 @@
     padding: 40px;
     gap: 24px;
     animation: fadeIn 0.5s ease-out;
+    position: relative;
+    z-index: 1;
 }
 
 @keyframes fadeIn {

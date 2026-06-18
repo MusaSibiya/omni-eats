@@ -1,14 +1,27 @@
 .pageWrapper {
     min-height: 100vh;
-    background: var(--bg-tertiary);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    min-height: calc(100vh - 200px);
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+}
+
+.pageWrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .backBtn {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
 }
 
 .checkoutGrid {
@@ -17,8 +30,10 @@
     gap: 40px;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px;
-    margin-top: 80px;
+    padding: 40px 20px;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
     /* Space for fixed header if needed */
 }
 
@@ -107,7 +122,24 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-tertiary);
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+}
+
+.emptyContainer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .emptyContent {
@@ -117,6 +149,8 @@
     align-items: center;
     justify-content: center;
     gap: 20px;
+    position: relative;
+    z-index: 1;
 }
 
 .emptyContent h1 {
