@@ -2,10 +2,30 @@
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background: var(--bg-secondary);
+    background-image: url('/images/login_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    position: relative;
+    overflow: hidden;
+    padding-top: 40px;
+}
+
+.main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--bg-primary);
+    opacity: 0.85;
+    z-index: 0;
 }
 
 .container {
+    position: relative;
+    z-index: 1;
     width: 100%;
     padding: 0 20px;
 }
