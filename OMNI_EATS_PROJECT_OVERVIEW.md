@@ -4,6 +4,13 @@
 
 **Omni Eats** is a full-stack food delivery platform built for the South African market. It connects customers, local restaurants, and delivery drivers in one seamless ecosystem. The platform supports multiple user roles, online payments (PayFast & Stripe), and comprehensive dashboard management.
 
+### Important Note for iOS/iPhone Users
+- **Android**: Uses `.apk` files - users can download and install directly (if "Unknown Sources" is enabled)
+- **iOS (iPhone)**: Does NOT use `.apk` files! iOS apps use `.ipa` files, and you CANNOT just download and install them directly like Android!
+  - For iOS, you need to use **TestFlight** (for beta testing) or submit to the **App Store** (for public release)
+  - You need an **Apple Developer Account** ($99/year) to use TestFlight and App Store
+  - You also need a **Mac** (with Xcode) to build and sign iOS apps!
+
 ---
 
 ## 2. Core Features
@@ -171,6 +178,7 @@ Here are several ways to monetize Omni Eats:
 - Node.js 20+
 - PostgreSQL database (or use SQLite for local development)
 - npm or yarn
+- **For iOS**: Mac with Xcode, Apple Developer Account ($99/year)
 
 ### Installation
 1. Clone the repository
@@ -188,10 +196,31 @@ Here are several ways to monetize Omni Eats:
 
 ---
 
-## 8. Next Steps for Development
+## 8. Mobile App Setup (Android & iOS)
+
+### Android Setup
+1. Build the Next.js app first: `npm run build`
+2. Add Android platform (if not already added): `npm run cap:android`
+3. Sync web assets: `npm run cap:sync`
+4. Open in Android Studio: `npm run cap:open:android`
+5. Build APK/AAB in Android Studio!
+
+### iOS Setup (Requires a Mac!
+1. Build the Next.js app first: `npm run build`
+2. Install dependencies (we added `@capacitor/ios` to package.json!)
+3. Add iOS platform: `npm run cap:ios`
+4. Sync web assets: `npm run cap:sync`
+5. Open in Xcode: `npm run cap:open:ios`
+6. Configure your Apple Developer Team in Xcode (for signing)
+7. For beta testing: Archive and upload to **App Store Connect** then use **TestFlight**
+8. For public release: Submit to App Store!
+
+---
+
+## 9. Next Steps for Development
 
 1. **Payment Integration**: Ensure PayFast and Stripe are fully configured with live credentials
-2. **Mobile App**: Build out full Android app using Capacitor
+2. **Mobile App**: Build out full Android & iOS apps using Capacitor
 3. **Real-time Updates**: Add WebSockets for live order tracking and notifications
 4. **Driver App**: Create dedicated driver app (or enhance driver dashboard)
 5. **Marketing Features**: Add referral program, loyalty points, promo code management
@@ -200,10 +229,10 @@ Here are several ways to monetize Omni Eats:
 
 ---
 
-## 9. Contact & Support
+## 10. Contact & Support
 
 For questions about the project or business plan, refer to the codebase or contact the development team.
 
 ---
 
-**Note**: This is a living document – update it as the project grows and evolves!
+**Note**: This is a living document - update it as the project grows and evolves!

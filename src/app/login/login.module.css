@@ -337,6 +337,30 @@
     margin-top: 1rem;
 }
 
+.timeoutMessage {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.successIcon, .timeoutIcon {
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.successMessage {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .footer {
     margin-top: 1rem;
     text-align: center;

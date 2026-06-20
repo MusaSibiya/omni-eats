@@ -66,6 +66,10 @@ export const authConfig: NextAuthConfig = {
     providers: [], // Add providers with an empty array for now
     debug: true,
     trustHost: true,
-    session: { strategy: 'jwt' },
+    session: { 
+        strategy: 'jwt',
+        maxAge: 3 * 60, // 3 minutes
+        updateAge: 0, // Don't update session age on activity, we'll handle client-side
+    },
     secret: process.env.AUTH_SECRET,
 };

@@ -6,6 +6,7 @@ import { AuthProvider } from "@/contexts/AuthProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { Header } from "@/components/layout/Header";
 import { auth } from "@/auth";
+import { SessionTimeout } from "@/components/features/SessionTimeout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -61,6 +62,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <AuthProvider session={session}>
+          <SessionTimeout />
           <CartProvider>
             <ThemeProvider>
               <Header session={session} key={session?.user?.email || 'guest'} />

@@ -30,12 +30,21 @@ export default function LoginPage() {
     const [errorMessage, dispatch, isPending] = useActionState(authenticate, undefined);
     const [currentSlide, setCurrentSlide] = useState(0);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [showTimeout, setShowTimeout] = useState(false);
 
     useEffect(() => {
         if (searchParams.get('registered') === 'true') {
             setShowSuccess(true);
             // Optional: Hide after some time if desired, but keeping it visible is good feedback
             const timer = setTimeout(() => setShowSuccess(false), 8000);
+            return () => clearTimeout(timer);
+        }
+    }, [searchParams]);
+
+    useEffect(() => {
+        if (searchParams.get('timeout') === 'true') {
+            setShowTimeout(true);
+            const timer = setTimeout(() => setShowTimeout(false), 8000);
             return () => clearTimeout(timer);
         }
     }, [searchParams]);
@@ -95,6 +104,16 @@ export default function LoginPage() {
                             <div>
                                 <strong>Account Created!</strong>
                                 <span>Please sign in to continue.</span>
+                            </div>
+                        </div>
+                    )}
+
+                    {showTimeout && (
+                        <div className={styles.timeoutMessage}>
+                            <div className={styles.timeoutIcon}>⏰</div>
+                            <div>
+                                <strong>Session Expired</strong>
+                                <span>You were signed out due to inactivity. Please sign in again.</span>
                             </div>
                         </div>
                     )}
