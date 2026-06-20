@@ -1037,6 +1037,13 @@
     }
 }
 
+.headerActions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
     .mainContent {
         padding-top: 80px !important;
@@ -1085,8 +1092,30 @@
         font-size: 1.75rem !important;
     }
 
+    .headerActions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
     .refreshBtn {
-        padding: 10px 16px;
+        padding: 10px 14px;
         font-size: 0.85rem;
+        width: auto;
+        white-space: nowrap;
+    }
+
+    .refreshBtn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .refreshBtn .refreshText {
+        display: none;
+    }
+}
+
+@media (min-width: 481px) {
+    .refreshBtn .refreshText {
+        display: inline;
     }
 }
