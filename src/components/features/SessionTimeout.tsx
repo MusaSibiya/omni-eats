@@ -1,14 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 
 const TIMEOUT = 3 * 60 * 1000; // 3 minutes in milliseconds
 
 export function SessionTimeout() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const [showMessage, setShowMessage] = useState(false);
 
   const resetTimeout = () => {
     if (timeoutRef.current) {
@@ -20,13 +19,12 @@ export function SessionTimeout() {
   };
 
   const handleTimeout = async () => {
-    setShowMessage(true);
     await signOut({ callbackUrl: '/login?timeout=true' });
   };
 
   useEffect(() => {
+    // Only setup listeners if authenticated
     if (status === 'authenticated') {
-      // Reset timeout on user activity
       const activityEvents = [
         'mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'
       ];
@@ -35,7 +33,7 @@ export function SessionTimeout() {
         window.addEventListener(event, resetTimeout, { passive: true });
       });
       
-      resetTimeout(); // Start the timeout
+      resetTimeout(); // Start the initial timeout
 
       return () => {
         if (timeoutRef.current) {
