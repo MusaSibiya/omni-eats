@@ -4,6 +4,7 @@ import withPWAInit from "@ducanh2912/next-pwa";
 const withPWA = withPWAInit({
   dest: "public",
   register: true,
+  // @ts-expect-error skipWaiting is a valid option for this PWA plugin
   skipWaiting: true,
   disable: process.env.NODE_ENV === "development",
 });
@@ -21,6 +22,7 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // @ts-expect-error eslint is a valid legacy option
   eslint: {
     ignoreDuringBuilds: true,
   },

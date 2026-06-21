@@ -36,5 +36,6 @@ export default async function OrdersPage() {
         orderBy: { createdAt: 'desc' },
     });
 
-    return <OrdersPageClient orders={orders} />;
+    const serializedOrders = JSON.parse(JSON.stringify(orders));
+    return <OrdersPageClient orders={serializedOrders} />;
 }

@@ -19,22 +19,7 @@ interface MenuWithFiltersProps {
 }
 
 export function MenuWithFilters({ menuItems }: MenuWithFiltersProps) {
-    const [categorySearches, setCategorySearches] = useState<Record<string, string>>({});
-    const [selectedCategories, setSelectedCategories] = useState<string[]>([
-        'Starters', 'Mains', 'Desserts', 'Sides', 'Drinks'
-    ]);
-    const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
-    const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
-    const [showFilters, setShowFilters] = useState(true);
-
-    const updateCategorySearch = (category: string, query: string) => {
-        setCategorySearches(prev => ({
-            ...prev,
-            [category]: query
-        }));
-    };
-
-    // Group menu items by category
+    // Group menu items by category (do this first to get available categories)
     const categoriesMap = new Map<string, MenuItem[]>();
 
     menuItems.forEach((item) => {
@@ -49,6 +34,21 @@ export function MenuWithFilters({ menuItems }: MenuWithFiltersProps) {
         name,
         items,
     }));
+
+    const categoryNames = categories.map(cat => cat.name);
+
+    const [categorySearches, setCategorySearches] = useState<Record<string, string>>({});
+    const [selectedCategories, setSelectedCategories] = useState<string[]>(categoryNames);
+    const [selectedDietary, setSelectedDietary] = useState<string[]>([]);
+    const [selectedPriceRanges, setSelectedPriceRanges] = useState<string[]>([]);
+    const [showFilters, setShowFilters] = useState(true);
+
+    const updateCategorySearch = (category: string, query: string) => {
+        setCategorySearches(prev => ({
+            ...prev,
+            [category]: query
+        }));
+    };
 
     const toggleCategory = (category: string) => {
         setSelectedCategories(prev =>
@@ -137,8 +137,8 @@ export function MenuWithFilters({ menuItems }: MenuWithFiltersProps) {
                     <div className={styles.filterContent}>
                         <h3 className={styles.filterTitle}>Categories</h3>
                         <div className={styles.filterOptions}>
-                            {['Starters', 'Mains', 'Desserts', 'Sides', 'Drinks'].map((category) => {
-                                const hasItems = categories.some(cat => cat.name === category);
+                            {categoryNames.map((category) => {
+                                const hasItems = true;
                                 return (
                                     <label key={category} className={styles.filterOption}>
                                         <input
@@ -276,7 +276,7 @@ export function MenuWithFilters({ menuItems }: MenuWithFiltersProps) {
                     <div className={styles.noResults}>
                         <p>No menu items match your filters</p>
                         <button
-                            onClick={() => setSelectedCategories(['Starters', 'Mains', 'Desserts', 'Sides', 'Drinks'])}
+                            onClick={() => setSelectedCategories(categoryNames)}
                             className={styles.resetBtn}
                         >
                             Reset Filters

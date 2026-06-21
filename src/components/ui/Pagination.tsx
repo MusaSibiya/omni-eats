@@ -21,14 +21,14 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
     }, []);
 
     const getDisplayedPages = () => {
-        if (totalPages <= 3) {
+        if (totalPages <= 5) {
             return pages;
         }
-        if (currentPage <= 2) {
-            return isMobile ? [1, 2, '...', totalPages] : [1, 2, 3, 4, '...', totalPages];
+        if (currentPage <= 3) {
+            return isMobile ? [1, 2, '...', totalPages] : [1, 2, 3, '...', totalPages];
         }
-        if (currentPage >= totalPages - 1) {
-            return isMobile ? [1, '...', totalPages - 1, totalPages] : [1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+        if (currentPage >= totalPages - 2) {
+            return isMobile ? [1, '...', totalPages - 1, totalPages] : [1, '...', totalPages - 2, totalPages - 1, totalPages];
         }
         return isMobile ? [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages] : [1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages];
     };

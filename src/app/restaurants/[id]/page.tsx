@@ -42,12 +42,13 @@ export default async function RestaurantDetails({ params }: PageProps) {
         notFound();
     }
 
+    const serializedRestaurant = JSON.parse(JSON.stringify(restaurant));
     const isFav = await isFavorited(id);
 
     // Group menu items by category
-    const categoriesMap = new Map<string, typeof restaurant.menuItems>();
+    const categoriesMap = new Map<string, typeof serializedRestaurant.menuItems>();
 
-    restaurant.menuItems.forEach((item: any) => {
+    serializedRestaurant.menuItems.forEach((item: any) => {
         const category = item.category || 'Other';
         if (!categoriesMap.has(category)) {
             categoriesMap.set(category, []);
@@ -62,7 +63,7 @@ export default async function RestaurantDetails({ params }: PageProps) {
 
     // Map seed names to real existing images
     let imageSrc = '/images/restaurant-hero.png';
-    const name = restaurant.name;
+    const name = serializedRestaurant.name;
 
     if (name === 'The Golden Plate') imageSrc = '/images/hero-salmon.png';
     else if (name === 'Sakura Sushi') imageSrc = '/images/hero-salmon.png';
@@ -71,8 +72,8 @@ export default async function RestaurantDetails({ params }: PageProps) {
     else if (name === 'Cape Malay Curry House') imageSrc = '/images/tomato-chicken.png';
     else if (name === 'Lekker Bites') imageSrc = '/images/jalapeno-popper.png';
     else if (name === 'Savanna Spice') imageSrc = '/images/corner-salad.png';
-    else if (restaurant.imageUrl && !restaurant.imageUrl.includes('restaurant-')) {
-        imageSrc = restaurant.imageUrl;
+    else if (serializedRestaurant.imageUrl && !serializedRestaurant.imageUrl.includes('restaurant-')) {
+        imageSrc = serializedRestaurant.imageUrl;
     }
 
     return (
@@ -81,19 +82,19 @@ export default async function RestaurantDetails({ params }: PageProps) {
                 {/* Hero */}
                 <div className={styles.hero}>
                     <div className={styles.heroBackground}>
-                        <img src={imageSrc} alt={restaurant.name} className={styles.heroImage} />
+                        <img src={imageSrc} alt={serializedRestaurant.name} className={styles.heroImage} />
                     </div>
                     <div className={styles.heroContent}>
                         <BackButton className={styles.backBtn} />
                         <div className={styles.heroHeader}>
                             <div>
-                                <h1 className={styles.title}>{restaurant.name}</h1>
+                                <h1 className={styles.title}>{serializedRestaurant.name}</h1>
                                 <div className={styles.meta}>
-                                    <span className={styles.rating}>★ {restaurant.rating.toFixed(1)}</span>
+                                    <span className={styles.rating}>★ {serializedRestaurant.rating.toFixed(1)}</span>
                                     <span>•</span>
-                                    <span>{restaurant.description}</span>
+                                    <span>{serializedRestaurant.description}</span>
                                     <span>•</span>
-                                    <span>{restaurant.deliveryTime}</span>
+                                    <span>{serializedRestaurant.deliveryTime}</span>
                                 </div>
                             </div>
                             {session && <FavoriteButton restaurantId={id} initialIsFavorite={isFav} />}
@@ -103,7 +104,7 @@ export default async function RestaurantDetails({ params }: PageProps) {
 
                 {/* Menu with Filters */}
                 <MenuWithFilters
-                    menuItems={restaurant.menuItems.map(item => ({
+                    menuItems={serializedRestaurant.menuItems.map((item: any) => ({
                         ...item,
                         price: Number(item.price),
                     }))}
@@ -111,11 +112,11 @@ export default async function RestaurantDetails({ params }: PageProps) {
 
                 {/* Reviews Section */}
                 <section id="reviews" className={styles.reviewsSection}>
-                    <h2 className={styles.categoryTitle}>Reviews ({restaurant.reviews.length})</h2>
+                    <h2 className={styles.categoryTitle}>Reviews ({serializedRestaurant.reviews.length})</h2>
 
-                    {restaurant.reviews.length > 0 && (
+                    {serializedRestaurant.reviews.length > 0 && (
                         <div className={styles.reviewsList}>
-                            {restaurant.reviews.map((review: any) => (
+                            {serializedRestaurant.reviews.map((review: any) => (
                                 <div key={review.id} className={styles.reviewCard}>
                                     <div className={styles.reviewHeader}>
                                         <div>
