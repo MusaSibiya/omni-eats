@@ -1,5 +1,29 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper to convert Prisma Decimals to Numbers for JSON serialization
+function sanitizeData(data: any): any {
+    if (data === null || data === undefined) return data;
+    
+    if (data instanceof Decimal) {
+        return Number(data);
+    }
+    
+    if (Array.isArray(data)) {
+        return data.map(item => sanitizeData(item));
+    }
+    
+    if (typeof data === 'object') {
+        const sanitized: any = {};
+        for (const key in data) {
+            sanitized[key] = sanitizeData(data[key]);
+        }
+        return sanitized;
+    }
+    
+    return data;
+}
 
 export async function GET() {
     try {
@@ -12,7 +36,7 @@ export async function GET() {
                 menuItems: true,
             },
         });
-        return NextResponse.json(restaurants);
+        return NextResponse.json(sanitizeData(restaurants));
     } catch (error) {
         return NextResponse.json({ error: 'Failed to fetch restaurants' }, { status: 500 });
     }

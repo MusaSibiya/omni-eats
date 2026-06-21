@@ -1,6 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import Stripe from 'stripe';
+import { Decimal } from '@prisma/client/runtime/library';
+
+// Helper to convert Prisma Decimals to Numbers for JSON serialization
+function sanitizeData(data: any): any {
+    if (data === null || data === undefined) return data;
+    
+    if (data instanceof Decimal) {
+        return Number(data);
+    }
+    
+    if (Array.isArray(data)) {
+        return data.map(item => sanitizeData(item));
+    }
+    
+    if (typeof data === 'object') {
+        const sanitized: any = {};
+        for (const key in data) {
+            sanitized[key] = sanitizeData(data[key]);
+        }
+        return sanitized;
+    }
+    
+    return data;
+}
 
 // Lazy initialization for Stripe
 let stripe: Stripe | null = null;
@@ -122,7 +146,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({
                 success: true,
-                order: existingOrder,
+                order: sanitizeData(existingOrder),
                 message: 'Order already confirmed'
             });
         }
@@ -203,7 +227,7 @@ export async function POST(req: NextRequest) {
 
             return NextResponse.json({
                 success: true,
-                order: updatedOrder,
+                order: sanitizeData(updatedOrder),
                 message: 'Order confirmed successfully'
             });
         } catch (updateError: any) {
@@ -222,10 +246,10 @@ export async function POST(req: NextRequest) {
 
                 if (orderWithPayment) {
                     return NextResponse.json({
-                        success: true,
-                        order: orderWithPayment,
-                        message: 'Order already confirmed'
-                    });
+                    success: true,
+                    order: sanitizeData(orderWithPayment),
+                    message: 'Order already confirmed'
+                });
                 }
             }
 
