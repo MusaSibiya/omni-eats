@@ -12,7 +12,17 @@ async function main() {
     { name: "Braai Master", email: "braai@omni.com", restaurantName: "The Biltong & Braai Hub" },
     { name: "Spice Chef", email: "spice@omni.com", restaurantName: "Cape Malay Spice House" },
     { name: "Sea Breeze Manager", email: "sea@omni.com", restaurantName: "Durban Sea Breeze" },
-    { name: "Veggie Chef", email: "veggie@omni.com", restaurantName: "Vibrant Veggie Vine" }
+    { name: "Veggie Chef", email: "veggie@omni.com", restaurantName: "Vibrant Veggie Vine" },
+    { name: "Pizza King", email: "pizza@omni.com", restaurantName: "Pretoria Pizza Palace" },
+    { name: "Shisanyama Boss", email: "shisa@omni.com", restaurantName: "Soweto Shisanyama" },
+    { name: "Steakhouse Owner", email: "steak@omni.com", restaurantName: "Stellenbosch Steakhouse" },
+    { name: "Sushi Master", email: "sushi@omni.com", restaurantName: "East Coast Sushi Bar" },
+    { name: "Kota King", email: "kota@omni.com", restaurantName: "Kimberley Kota Kitchen" },
+    { name: "Bistro Chef", email: "bistro@omni.com", restaurantName: "Bloemfontein Bistro" },
+    { name: "Peri-Peri King", email: "peri@omni.com", restaurantName: "Polokwane Peri-Peri" },
+    { name: "Burger Boss", email: "burger@omni.com", restaurantName: "George Gourmet Burgers" },
+    { name: "Noodle Master", email: "noodle@omni.com", restaurantName: "Nelspruit Noodle Bar" },
+    { name: "Ribs & Wings Owner", email: "ribs@omni.com", restaurantName: "Rustenburg Ribs & Wings" }
   ];
 
   for (const ownerData of owners) {

@@ -5,6 +5,7 @@ import { Footer } from '@/components/layout/Footer';
 import styles from './page.module.css';
 import Image from 'next/image';
 import { RestaurantList } from './RestaurantList';
+import { Pagination } from '@/components/ui/Pagination';
 
 const HERO_IMAGES = [
     '/images/restaurant-hero.png',
@@ -15,11 +16,14 @@ const HERO_IMAGES = [
 ];
 
 interface RestaurantsPageProps {
-    restaurants: any[];
+    allRestaurants: any[];
+    itemsPerPage: number;
 }
 
-export default function RestaurantsPageClient({ restaurants }: RestaurantsPageProps) {
+export default function RestaurantsPageClient({ allRestaurants, itemsPerPage }: RestaurantsPageProps) {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery, setSearchQuery] = useState('');
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -28,6 +32,27 @@ export default function RestaurantsPageClient({ restaurants }: RestaurantsPagePr
 
         return () => clearInterval(interval);
     }, []);
+
+    // Filter restaurants based on search query
+    const filteredRestaurants = allRestaurants.filter(restaurant =>
+        restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        restaurant.description?.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredRestaurants.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedRestaurants = filteredRestaurants.slice(startIndex, startIndex + itemsPerPage);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
+    };
 
     return (
         <main className={styles.main}>
@@ -66,7 +91,14 @@ export default function RestaurantsPageClient({ restaurants }: RestaurantsPagePr
             </section>
 
             <div className={styles.container}>
-                <RestaurantList restaurants={restaurants} />
+                <RestaurantList 
+                    restaurants={paginatedRestaurants} 
+                    searchQuery={searchQuery} 
+                    onSearchChange={handleSearchChange} 
+                    totalPages={totalPages} 
+                    currentPage={currentPage} 
+                    onPageChange={handlePageChange} 
+                />
             </div>
 
             <Footer />

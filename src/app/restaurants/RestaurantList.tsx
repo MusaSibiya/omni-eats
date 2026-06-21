@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Pagination } from '@/components/ui/Pagination';
 import styles from './page.module.css';
 
 interface Restaurant {
@@ -18,6 +18,11 @@ interface Restaurant {
 
 interface RestaurantListProps {
     restaurants: Restaurant[];
+    searchQuery: string;
+    onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    totalPages: number;
+    currentPage: number;
+    onPageChange: (page: number) => void;
 }
 
 const getDynamicDetails = (restaurant: Restaurant) => {
@@ -35,14 +40,14 @@ const getDynamicDetails = (restaurant: Restaurant) => {
     return { price: priceCat, tags };
 };
 
-export function RestaurantList({ restaurants }: RestaurantListProps) {
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const filteredRestaurants = restaurants.filter(restaurant =>
-        restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        restaurant.description?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
+export function RestaurantList({ 
+    restaurants, 
+    searchQuery, 
+    onSearchChange, 
+    totalPages, 
+    currentPage, 
+    onPageChange 
+}: RestaurantListProps) {
     return (
         <>
             <div className={styles.searchContainer}>
@@ -55,12 +60,12 @@ export function RestaurantList({ restaurants }: RestaurantListProps) {
                         type="text"
                         placeholder="Search restaurants..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={onSearchChange}
                         className={styles.searchInput}
                     />
                     {searchQuery && (
                         <button
-                            onClick={() => setSearchQuery('')}
+                            onClick={() => onSearchChange({ target: { value: '' } } as React.ChangeEvent<HTMLInputElement>)}
                             className={styles.clearButton}
                             aria-label="Clear search"
                         >
@@ -68,14 +73,9 @@ export function RestaurantList({ restaurants }: RestaurantListProps) {
                         </button>
                     )}
                 </div>
-                {searchQuery && (
-                    <p className={styles.searchResults}>
-                        {filteredRestaurants.length} {filteredRestaurants.length === 1 ? 'restaurant' : 'restaurants'} found
-                    </p>
-                )}
             </div>
 
-            {filteredRestaurants.length === 0 ? (
+            {restaurants.length === 0 ? (
                 <div className={styles.noResults}>
                     <div className={styles.noResultsIcon}>🔍</div>
                     <h3 className={styles.noResultsTitle}>No restaurants found</h3>
@@ -84,67 +84,78 @@ export function RestaurantList({ restaurants }: RestaurantListProps) {
                     </p>
                 </div>
             ) : (
-                <div className={styles.grid}>
-                    {filteredRestaurants.map((restaurant) => {
-                        const { price, tags } = getDynamicDetails(restaurant);
+                <>
+                    <div className={styles.grid}>
+                        {restaurants.map((restaurant) => {
+                            const { price, tags } = getDynamicDetails(restaurant);
 
-                        // Map seed names to real existing images in public/images or use DB image
-                        let imageSrc = '/images/restaurant-hero.png';
-                        const name = restaurant.name;
+                            // Map seed names to real existing images in public/images or use DB image
+                            let imageSrc = '/images/restaurant-hero.png';
+                            const name = restaurant.name;
 
-                        if (name === 'Soweto Gold') imageSrc = restaurant.imageUrl || '/images/turkey-bowl.png';
-                        else if (name === 'Max\'s Lifestyle') imageSrc = restaurant.imageUrl || '/images/hero-salmon.png';
-                        else if (name === 'Durban Curry House') imageSrc = restaurant.imageUrl || '/images/tomato-chicken.png';
-                        else if (name === 'The Kota Joint') imageSrc = restaurant.imageUrl || '/images/jalapeno-popper.png';
-                        else if (name === 'The Golden Plate') imageSrc = '/images/hero-salmon.png';
-                        else if (name === 'Sakura Sushi') imageSrc = '/images/hero-salmon.png';
-                        else if (name === 'Burger & Co.') imageSrc = '/images/jalapeno-popper.png';
-                        else if (name === 'Mzansi Flavors') imageSrc = '/images/turkey-bowl.png';
-                        else if (name === 'Cape Malay Curry House') imageSrc = '/images/tomato-chicken.png';
-                        else if (name === 'Lekker Bites') imageSrc = '/images/jalapeno-popper.png';
-                        else if (name === 'Savanna Spice') imageSrc = '/images/corner-salad.png';
-                        else if (restaurant.imageUrl) {
-                            // Use DB image if provided
-                            imageSrc = restaurant.imageUrl;
-                        }
+                            if (name === 'Soweto Gold') imageSrc = restaurant.imageUrl || '/images/turkey-bowl.png';
+                            else if (name === 'Max\'s Lifestyle') imageSrc = restaurant.imageUrl || '/images/hero-salmon.png';
+                            else if (name === 'Durban Curry House') imageSrc = restaurant.imageUrl || '/images/tomato-chicken.png';
+                            else if (name === 'The Kota Joint') imageSrc = restaurant.imageUrl || '/images/jalapeno-popper.png';
+                            else if (name === 'The Golden Plate') imageSrc = '/images/hero-salmon.png';
+                            else if (name === 'Sakura Sushi') imageSrc = '/images/hero-salmon.png';
+                            else if (name === 'Burger & Co.') imageSrc = '/images/jalapeno-popper.png';
+                            else if (name === 'Mzansi Flavors') imageSrc = '/images/turkey-bowl.png';
+                            else if (name === 'Cape Malay Curry House') imageSrc = '/images/tomato-chicken.png';
+                            else if (name === 'Lekker Bites') imageSrc = '/images/jalapeno-popper.png';
+                            else if (name === 'Savanna Spice') imageSrc = '/images/corner-salad.png';
+                            else if (restaurant.imageUrl) {
+                                // Use DB image if provided
+                                imageSrc = restaurant.imageUrl;
+                            }
 
-                        return (
-                            <Link href={`/restaurants/${restaurant.id}`} key={restaurant.id} className={styles.card} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                <div className={styles.cardImageWrapper}>
-                                    <Image
-                                        src={imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('http') ? imageSrc : (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/') ? imageSrc : `/${imageSrc || 'images/restaurant-hero.png'}`)}
-                                        alt={restaurant.name || 'Restaurant'}
-                                        fill
-                                        className={styles.cardImage}
-                                        quality={100}
-                                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, (max-width: 1399px) 33vw, (max-width: 1799px) 25vw, 20vw"
-                                    />
-                                </div>
-                                <div className={styles.cardContent}>
-                                    <div className={styles.cardHeader}>
-                                        <h3 className={styles.restaurantName}>{restaurant.name}</h3>
-                                        <div className={styles.rating}>
-                                            <span className={styles.star}>★</span>
-                                            {restaurant.rating}
+                            return (
+                                <Link href={`/restaurants/${restaurant.id}`} key={restaurant.id} className={styles.card} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                    <div className={styles.cardImageWrapper}>
+                                        <Image
+                                            src={imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('http') ? imageSrc : (imageSrc && typeof imageSrc === 'string' && imageSrc.startsWith('/') ? imageSrc : `/${imageSrc || 'images/restaurant-hero.png'}`)}
+                                            alt={restaurant.name || 'Restaurant'}
+                                            fill
+                                            className={styles.cardImage}
+                                            quality={100}
+                                            sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, (max-width: 1399px) 33vw, (max-width: 1799px) 25vw, 20vw"
+                                        />
+                                    </div>
+                                    <div className={styles.cardContent}>
+                                        <div className={styles.cardHeader}>
+                                            <h3 className={styles.restaurantName}>{restaurant.name}</h3>
+                                            <div className={styles.rating}>
+                                                <span className={styles.star}>★</span>
+                                                {restaurant.rating}
+                                            </div>
+                                        </div>
+                                        <div className={styles.tags}>
+                                            {tags.map(tag => (
+                                                <span key={tag} className={styles.tag}>{tag}</span>
+                                            ))}
+                                        </div>
+                                        <div className={styles.cardDetails}>
+                                            <span>{restaurant.deliveryTime || '30-45 min'}</span>
+                                            <span>•</span>
+                                            <span>{price}</span>
+                                            <span>•</span>
+                                            <span>Standard Delivery</span>
                                         </div>
                                     </div>
-                                    <div className={styles.tags}>
-                                        {tags.map(tag => (
-                                            <span key={tag} className={styles.tag}>{tag}</span>
-                                        ))}
-                                    </div>
-                                    <div className={styles.cardDetails}>
-                                        <span>{restaurant.deliveryTime || '30-45 min'}</span>
-                                        <span>•</span>
-                                        <span>{price}</span>
-                                        <span>•</span>
-                                        <span>Standard Delivery</span>
-                                    </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                    {totalPages > 1 && (
+                        <div style={{ padding: '0 40px' }}>
+                            <Pagination
+                                currentPage={currentPage}
+                                totalPages={totalPages}
+                                onPageChange={onPageChange}
+                            />
+                        </div>
+                    )}
+                </>
             )}
         </>
     );
