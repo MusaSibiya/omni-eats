@@ -22,14 +22,14 @@ export default function CheckoutSuccessPage() {
 
         if (urlOrderId) setOrderId(urlOrderId);
 
-        if (paymentIntentId) {
-            // Confirm the order on the backend
-            console.log('Calling /api/orders/confirm with:', { paymentIntentId });
+        if (paymentIntentId && urlOrderId) {
+            // Handle both mock and real payments
+            console.log('Calling /api/orders/confirm with:', { paymentIntentId, orderId: urlOrderId });
 
             fetch('/api/orders/confirm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ paymentIntentId }),
+                body: JSON.stringify({ paymentIntentId, orderId: urlOrderId }),
             })
                 .then(async res => {
                     console.log('Raw response status:', res.status);

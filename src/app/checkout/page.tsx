@@ -1,22 +1,25 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import { useCart } from '@/contexts/CartContext';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import styles from './page.module.css';
-import Image from 'next/image';
 import Link from 'next/link';
 
-// Make sure to call loadStripe outside of a component’s render to avoid
-// recreating the Stripe object on every render.
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+let stripePromise: Promise<Stripe | null> | null = null;
+
+// Initialize stripePromise only if we have a publishable key
+if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+}
 
 export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
+    const [isMock, setIsMock] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [restaurant, setRestaurant] = useState<any>(null);
     const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -54,6 +57,7 @@ export default function CheckoutPage() {
                     } else {
                         setClientSecret(data.clientSecret);
                         setOrderId(data.orderId);
+                        setIsMock(data.isMock === true);
                     }
                 })
                 .catch(err => {
@@ -178,9 +182,23 @@ export default function CheckoutPage() {
                             <p>Preparing checkout...</p>
                         </div>
                     ) : clientSecret ? (
-                        <Elements options={options} stripe={stripePromise}>
-                            <CheckoutForm orderId={orderId} />
-                        </Elements>
+                        isMock ? (
+                            <CheckoutForm orderId={orderId} isMock={isMock} />
+                        ) : stripePromise ? (
+                            <Elements options={options} stripe={stripePromise}>
+                                <CheckoutForm orderId={orderId} />
+                            </Elements>
+                        ) : (
+                            <div style={{ 
+                                padding: '1.5rem', 
+                                backgroundColor: 'rgba(239,68,68,0.05)', 
+                                border: '1px solid rgba(239,68,68,0.3)', 
+                                borderRadius: '8px',
+                                textAlign: 'center'
+                            }}>
+                                <p style={{ marginBottom: '1rem', color: '#e53e3e' }}>Payment service is not configured.</p>
+                            </div>
+                        )
                     ) : (
                         <div className={styles.paymentLoading}>
                             <div className={styles.spinner}></div>

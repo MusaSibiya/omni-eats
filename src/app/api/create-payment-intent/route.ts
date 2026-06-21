@@ -98,8 +98,13 @@ export async function POST(req: NextRequest) {
         // 2. Create PaymentIntent linked to this Order
         const stripeInstance = getStripe();
         if (!stripeInstance) {
-            console.error("Stripe secret key missing");
-            return NextResponse.json({ error: 'Payment service not configured' }, { status: 500 });
+            console.warn("Stripe secret key missing - returning mock client secret for testing");
+            // For testing without Stripe keys, return a mock client secret
+            return NextResponse.json({
+                clientSecret: 'mock_client_secret_' + order.id,
+                orderId: order.id,
+                isMock: true
+            });
         }
 
         console.log("DEBUG: Creating Stripe PaymentIntent with Secret Key present:", !!process.env.STRIPE_SECRET_KEY);

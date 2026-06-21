@@ -17,54 +17,77 @@ function getStripe() {
 export async function POST(req: NextRequest) {
     try {
         console.log('=== Order Confirm Endpoint Called ===');
-        const { paymentIntentId } = await req.json();
-        console.log('Received paymentIntentId:', paymentIntentId);
+        const { paymentIntentId, orderId: bodyOrderId } = await req.json();
+        console.log('Received paymentIntentId:', paymentIntentId, 'orderId:', bodyOrderId);
 
         if (!paymentIntentId) {
             console.error('Error: Missing paymentIntentId');
             return NextResponse.json({ error: 'Missing paymentIntentId' }, { status: 400 });
         }
 
-        const stripeInstance = getStripe();
-        if (!stripeInstance) {
-            console.error('Stripe secret key missing');
-            return NextResponse.json({ error: 'Payment service not configured' }, { status: 500 });
-        }
+        let orderId: string;
+        let amount: number = 0; // Will be filled either from stripe or mock
 
-        // 1. Retrieve the PaymentIntent from Stripe to verify status
-        console.log('Attempting to retrieve PaymentIntent from Stripe...');
-        let paymentIntent;
-        try {
-            paymentIntent = await stripeInstance.paymentIntents.retrieve(paymentIntentId);
-            console.log('PaymentIntent retrieved:', {
-                id: paymentIntent.id,
-                status: paymentIntent.status,
-                amount: paymentIntent.amount,
-                metadata: paymentIntent.metadata
+        // Check if it's a mock payment
+        if (paymentIntentId === 'mock_payment_intent') {
+            if (!bodyOrderId) {
+                console.error('Mock payment: Missing orderId in request body');
+                return NextResponse.json({ error: 'Missing orderId for mock payment' }, { status: 400 });
+            }
+            orderId = bodyOrderId;
+            console.log('Processing mock payment for order:', orderId);
+            
+            // Get the order amount from DB for mock payment
+            const mockOrder = await prisma.order.findUnique({
+                where: { id: orderId },
+                select: { total: true }
             });
-        } catch (stripeError: any) {
-            console.error('Stripe API Error:', stripeError.message);
-            console.error('Stripe Error Details:', {
-                type: stripeError.type,
-                code: stripeError.code,
-                statusCode: stripeError.statusCode
-            });
-            return NextResponse.json({
-                error: 'Failed to retrieve payment from Stripe',
-                details: stripeError.message
-            }, { status: 500 });
-        }
+            if (mockOrder) {
+                amount = Number(mockOrder.total);
+            }
+        } else {
+            const stripeInstance = getStripe();
+            if (!stripeInstance) {
+                console.error('Stripe secret key missing');
+                return NextResponse.json({ error: 'Payment service not configured' }, { status: 500 });
+            }
 
-        if (paymentIntent.status !== 'succeeded') {
-            console.warn('Payment not succeeded. Status:', paymentIntent.status);
-            return NextResponse.json({ error: 'Payment not succeeded yet' }, { status: 400 });
-        }
+            // 1. Retrieve the PaymentIntent from Stripe to verify status
+            console.log('Attempting to retrieve PaymentIntent from Stripe...');
+            let paymentIntent;
+            try {
+                paymentIntent = await stripeInstance.paymentIntents.retrieve(paymentIntentId);
+                console.log('PaymentIntent retrieved:', {
+                    id: paymentIntent.id,
+                    status: paymentIntent.status,
+                    amount: paymentIntent.amount,
+                    metadata: paymentIntent.metadata
+                });
+            } catch (stripeError: any) {
+                console.error('Stripe API Error:', stripeError.message);
+                console.error('Stripe Error Details:', {
+                    type: stripeError.type,
+                    code: stripeError.code,
+                    statusCode: stripeError.statusCode
+                });
+                return NextResponse.json({
+                    error: 'Failed to retrieve payment from Stripe',
+                    details: stripeError.message
+                }, { status: 500 });
+            }
 
-        const orderId = paymentIntent.metadata.orderId;
+            if (paymentIntent.status !== 'succeeded') {
+                console.warn('Payment not succeeded. Status:', paymentIntent.status);
+                return NextResponse.json({ error: 'Payment not succeeded yet' }, { status: 400 });
+            }
 
-        if (!orderId) {
-            console.error('Confirm Error: No orderId in metadata', paymentIntent.id);
-            return NextResponse.json({ error: 'No orderId in payment metadata' }, { status: 404 });
+            orderId = paymentIntent.metadata.orderId;
+            amount = Number(paymentIntent.amount) / 100;
+
+            if (!orderId) {
+                console.error('Confirm Error: No orderId in metadata', paymentIntent.id);
+                return NextResponse.json({ error: 'No orderId in payment metadata' }, { status: 404 });
+            }
         }
 
         // 2. Check if order is already processed (Idempotency)
@@ -118,9 +141,9 @@ export async function POST(req: NextRequest) {
                 },
                 create: {
                     orderId: orderId,
-                    amount: Number(paymentIntent.amount) / 100,
+                    amount: amount,
                     status: 'COMPLETED',
-                    paymentMethod: 'STRIPE_CARD',
+                    paymentMethod: paymentIntentId === 'mock_payment_intent' ? 'MOCK' : 'STRIPE_CARD',
                     payfastPaymentId: paymentIntentId
                 }
             });
