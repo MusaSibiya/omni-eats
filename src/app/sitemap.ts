@@ -1,23 +1,31 @@
 import { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
 
+export const dynamic = 'force-dynamic';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     const baseUrl = process.env.NEXT_PUBLIC_URL || 'http://localhost:3000';
 
-    // 1. Get all restaurants dynamic routes
-    const restaurants = await prisma.restaurant.findMany({
-        select: {
-            id: true,
-            updatedAt: true,
-        },
-    });
+    let restaurantUrls: MetadataRoute.Sitemap = [];
 
-    const restaurantUrls = restaurants.map((restaurant) => ({
-        url: `${baseUrl}/restaurants/${restaurant.id}`,
-        lastModified: restaurant.updatedAt,
-        changeFrequency: 'weekly' as const,
-        priority: 0.8,
-    }));
+    try {
+        // 1. Get all restaurants dynamic routes
+        const restaurants = await prisma.restaurant.findMany({
+            select: {
+                id: true,
+                updatedAt: true,
+            },
+        });
+
+        restaurantUrls = restaurants.map((restaurant) => ({
+            url: `${baseUrl}/restaurants/${restaurant.id}`,
+            lastModified: restaurant.updatedAt,
+            changeFrequency: 'weekly' as const,
+            priority: 0.8,
+        }));
+    } catch (error) {
+        console.error('Error fetching restaurants for sitemap:', error);
+    }
 
     // 2. Define static routes
     const routes = [
