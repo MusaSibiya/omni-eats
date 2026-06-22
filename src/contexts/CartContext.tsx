@@ -96,6 +96,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cartCount,
     }), [items, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount]);
 
+    if (!isInitialized) {
+        // Show a loading indicator while we load the cart
+        return null;
+    }
+
     return (
         <CartContext.Provider value={value}>
             {children}

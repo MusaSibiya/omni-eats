@@ -1,25 +1,22 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/checkout/CheckoutForm';
 import { useCart } from '@/contexts/CartContext';
 import { AddressAutocomplete } from '@/components/ui/AddressAutocomplete';
 import styles from './page.module.css';
+import Image from 'next/image';
 import Link from 'next/link';
 
-let stripePromise: Promise<Stripe | null> | null = null;
-
-// Initialize stripePromise only if we have a publishable key
-if (process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-}
+// Make sure to call loadStripe outside of a component’s render to avoid
+// recreating the Stripe object on every render.
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
-    const [isMock, setIsMock] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [restaurant, setRestaurant] = useState<any>(null);
     const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -44,10 +41,10 @@ export default function CheckoutPage() {
             fetch('/api/create-payment-intent', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    items, 
+                body: JSON.stringify({
+                    items,
                     amount: cartTotal,
-                    deliveryAddress: deliveryAddress 
+                    deliveryAddress: deliveryAddress
                 }),
             })
                 .then((res) => res.json())
@@ -57,11 +54,10 @@ export default function CheckoutPage() {
                     } else {
                         setClientSecret(data.clientSecret);
                         setOrderId(data.orderId);
-                        setIsMock(data.isMock === true);
                     }
                 })
                 .catch(err => {
-                    console.error("Error creating payment intent:", err);
+                    console.error("Error creating payment intent:", err);       
                     setErrorMsg("Failed to initialize payment. Please try again.");
                 })
                 .finally(() => {
@@ -87,7 +83,7 @@ export default function CheckoutPage() {
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyContent}>
                     <h1>Your cart is empty</h1>
-                    <p>Add some delicious meals before checking out.</p>
+                    <p>Add some delicious meals before checking out.</p>        
                     <Link href="/restaurants">
                         <button className={styles.btnPrimary}>Browse Menu</button>
                     </Link>
@@ -101,10 +97,10 @@ export default function CheckoutPage() {
             <div className={styles.checkoutGrid}>
                 {/* Left Column: Order Summary */}
                 <div className={styles.summarySection}>
-                    <div style={{ 
-                        background: 'rgba(255, 107, 53, 0.05)', 
-                        padding: '1rem', 
-                        borderRadius: '12px', 
+                    <div style={{
+                        background: 'rgba(255, 107, 53, 0.05)',
+                        padding: '1rem',
+                        borderRadius: '12px',
                         border: '1px solid rgba(255, 107, 53, 0.1)',
                         marginBottom: '2rem',
                         display: 'flex',
@@ -112,15 +108,15 @@ export default function CheckoutPage() {
                         gap: '12px'
                     }}>
                         <span style={{ fontSize: '1.5rem' }}>
-                            {restaurant?.deliveryAvailable ? '🛵' : '🛍️'}
+                            {restaurant?.deliveryAvailable ? '🚚' : '📍️'}
                         </span>
                         <div>
                             <p style={{ margin: 0, fontWeight: 'bold', color: 'var(--text-primary)' }}>
                                 {restaurant?.deliveryAvailable ? 'Delivery Order' : 'Self-Pickup Order'}
                             </p>
                             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                                {restaurant?.deliveryAvailable 
-                                    ? 'A driver will bring your order to you.' 
+                                {restaurant?.deliveryAvailable
+                                    ? 'A driver will bring your order to you.'  
                                     : 'Please collect your order at the restaurant.'}
                             </p>
                         </div>
@@ -139,10 +135,10 @@ export default function CheckoutPage() {
                         </div>
                     )}
 
-                    <h2 className={styles.sectionTitle}>Order Summary</h2>
+                    <h2 className={styles.sectionTitle}>Order Summary</h2>      
                     <div className={styles.itemsList}>
                         {items.map((item) => (
-                            <div key={item.id} className={styles.summaryItem}>
+                            <div key={item.id} className={styles.summaryItem}>  
                                 {/* Placeholder for item image if we have it later */}
                                 <div className={styles.itemInfo}>
                                     <span className={styles.itemName}>{item.name}</span>
@@ -168,8 +164,8 @@ export default function CheckoutPage() {
 
                 {/* Right Column: Payment Form */}
                 <div className={styles.paymentSection}>
-                    <h2 className={styles.sectionTitle}>Payment Details</h2>
-                    
+                    <h2 className={styles.sectionTitle}>Payment Details</h2>    
+
                     {errorMsg && (
                         <div className={styles.paymentError} style={{ marginBottom: '1.5rem', color: '#e53e3e', fontSize: '0.9rem' }}>
                             <p><strong>Error:</strong> {errorMsg}</p>
@@ -182,23 +178,9 @@ export default function CheckoutPage() {
                             <p>Preparing checkout...</p>
                         </div>
                     ) : clientSecret ? (
-                        isMock ? (
-                            <CheckoutForm orderId={orderId} isMock={isMock} />
-                        ) : stripePromise ? (
-                            <Elements options={options} stripe={stripePromise}>
-                                <CheckoutForm orderId={orderId} />
-                            </Elements>
-                        ) : (
-                            <div style={{ 
-                                padding: '1.5rem', 
-                                backgroundColor: 'rgba(239,68,68,0.05)', 
-                                border: '1px solid rgba(239,68,68,0.3)', 
-                                borderRadius: '8px',
-                                textAlign: 'center'
-                            }}>
-                                <p style={{ marginBottom: '1rem', color: '#e53e3e' }}>Payment service is not configured.</p>
-                            </div>
-                        )
+                        <Elements options={options} stripe={stripePromise}>     
+                            <CheckoutForm orderId={orderId} />
+                        </Elements>
                     ) : (
                         <div className={styles.paymentLoading}>
                             <div className={styles.spinner}></div>
