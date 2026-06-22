@@ -7,23 +7,43 @@ import { auth } from '@/auth';
 
 export default async function Home() {
   const session = await auth();
+  let featuredMeals = [];
 
-  let featuredMeals;
+  try {
+    if (session?.user?.id) {
+      // 1. Get user's favorite restaurants
+      const favorites = await prisma.favorite.findMany({
+        where: { userId: session.user.id },
+        select: { restaurantId: true },
+      });
 
-  if (session?.user?.id) {
-    // 1. Get user's favorite restaurants
-    const favorites = await prisma.favorite.findMany({
-      where: { userId: session.user.id },
-      select: { restaurantId: true },
-    });
+      const favoriteRestaurantIds = favorites.map(f => f.restaurantId);
 
-    const favoriteRestaurantIds = favorites.map(f => f.restaurantId);
+      if (favoriteRestaurantIds.length > 0) {
+        // 2. Get meals specifically from those restaurants
+        featuredMeals = await prisma.menuItem.findMany({
+          where: {
+            restaurantId: { in: favoriteRestaurantIds },
+            restaurant: {
+              deletedAt: null,
+              status: 'APPROVED'
+            }
+          },
+          take: 3,
+          select: {
+            id: true,
+            name: true,
+            category: true,
+            imageUrl: true,
+          },
+        });
+      }
+    }
 
-    if (favoriteRestaurantIds.length > 0) {
-      // 2. Get meals specifically from those restaurants
+    // 3. Fallback: If no user, no favorites, or not enough items, fetch general featured items
+    if (!featuredMeals || featuredMeals.length === 0) {
       featuredMeals = await prisma.menuItem.findMany({
         where: {
-          restaurantId: { in: favoriteRestaurantIds },
           restaurant: {
             deletedAt: null,
             status: 'APPROVED'
@@ -38,25 +58,9 @@ export default async function Home() {
         },
       });
     }
-  }
-
-  // 3. Fallback: If no user, no favorites, or not enough items, fetch general featured items
-  if (!featuredMeals || featuredMeals.length === 0) {
-    featuredMeals = await prisma.menuItem.findMany({
-      where: {
-        restaurant: {
-          deletedAt: null,
-          status: 'APPROVED'
-        }
-      },
-      take: 3,
-      select: {
-        id: true,
-        name: true,
-        category: true,
-        imageUrl: true,
-      },
-    });
+  } catch (error) {
+    console.error('Error fetching featured meals for home page:', error);
+    featuredMeals = [];
   }
 
   return (
