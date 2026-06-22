@@ -10,8 +10,8 @@ export default function CheckoutSuccessClient() {
     const { clearCart } = useCart();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [status, setStatus] = useState('loading'); // loading, success, error
-    const [errorDetails, setErrorDetails] = useState<string | null>(null);
+    const [status, setStatus] = useState('loading'); // loading, success, error 
+    const [errorDetails, setErrorDetails] = useState<string | null>(null);      
     const [orderId, setOrderId] = useState<string | null>(null);
 
     useEffect(() => {
@@ -22,14 +22,14 @@ export default function CheckoutSuccessClient() {
 
         if (urlOrderId) setOrderId(urlOrderId);
 
-        if (paymentIntentId && urlOrderId) {
-            // Handle both mock and real payments
-            console.log('Calling /api/orders/confirm with:', { paymentIntentId, orderId: urlOrderId });
+        if (paymentIntentId) {
+            // Confirm the order on the backend
+            console.log('Calling /api/orders/confirm with:', { paymentIntentId });
 
             fetch('/api/orders/confirm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ paymentIntentId, orderId: urlOrderId }),
+                body: JSON.stringify({ paymentIntentId }),
             })
                 .then(async res => {
                     console.log('Raw response status:', res.status);
@@ -101,7 +101,7 @@ export default function CheckoutSuccessClient() {
                     <>
                         <h1>Something went wrong</h1>
                         <p>We received your payment but couldn't finalize the order details. Please contact support.</p>
-                        {errorDetails && <p style={{ color: 'red', marginTop: '1rem', fontSize: '0.9rem', background: 'rgba(255,0,0,0.1)', padding: '0.5rem', borderRadius: '4px' }}><strong>Error Details:</strong> {errorDetails}</p>}
+                        {errorDetails && <p style={{ color: 'red', marginTop: '1rem', fontSize: '0.9rem', background: 'rgba(255,0,0,0.1)', padding: '0.5rem', borderRadius: '4px' }}><strong>Error Details:</strong> {errorDetails}</p>}        
                         {orderId && <p className={styles.orderId} style={{ marginTop: '1rem' }}>Reference: {orderId.slice(-4).toUpperCase()}</p>}
                     </>
                 )}
