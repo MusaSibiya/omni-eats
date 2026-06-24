@@ -16,7 +16,9 @@ export async function authenticate(
         const email = formData.get('email') as string;
         const password = formData.get('password') as string;
 
+        console.log('🔍 Looking for user with email:', email);
         const user = await prisma.user.findUnique({ where: { email } });
+        console.log('👤 Found user:', user ? 'Yes' : 'No');
 
         // Determine redirect based on role
         let redirectTo = '/';
@@ -28,19 +30,22 @@ export async function authenticate(
             redirectTo = '/driver-dashboard';
         }
 
+        console.log('🔐 Attempting sign in...');
         try {
             await signIn('credentials', {
                 email,
                 password,
                 redirect: false
             });
+            console.log('✅ Sign in successful!');
         } catch (error) {
+            console.error('❌ Sign in error:', error);
             if (error instanceof AuthError) {
                 switch (error.type) {
                     case 'CredentialsSignin':
                         return 'Invalid credentials.';
                     default:
-                        return 'Something went wrong.';
+                        return `Auth error: ${error.message}`;
                 }
             }
             throw error;
@@ -48,14 +53,15 @@ export async function authenticate(
 
         // Force cache revalidation and redirect
         revalidatePath('/', 'layout');
+        console.log('🔄 Redirecting to:', redirectTo);
         redirect(redirectTo);
 
     } catch (error) {
         if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
             throw error;
         }
-        console.error('❌ Authentication error:', error);
-        return 'Something went wrong.';
+        console.error('❌ Unhandled authentication error:', error);
+        return `Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
     }
 }
 
