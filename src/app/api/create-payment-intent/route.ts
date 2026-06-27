@@ -95,42 +95,13 @@ export async function POST(req: NextRequest) {
         });
         console.log("Order created:", order.id);
 
-        // 2. Create PaymentIntent linked to this Order
-        const stripeInstance = getStripe();
-        if (!stripeInstance) {
-            console.warn("Stripe secret key missing - returning mock client secret for testing");
-            // For testing without Stripe keys, return a mock client secret
-            return NextResponse.json({
-                clientSecret: 'mock_client_secret_' + order.id,
-                orderId: order.id,
-                isMock: true
-            });
-        }
-
-        console.log("DEBUG: Creating Stripe PaymentIntent with Secret Key present:", !!process.env.STRIPE_SECRET_KEY);
-        try {
-            const paymentIntent = await stripeInstance.paymentIntents.create({
-                amount: Math.round(amount * 100),
-                currency: 'zar',
-                automatic_payment_methods: { enabled: true },
-                metadata: {
-                    orderId: order.id,
-                    userId: session.user.id
-                }
-            });
-            console.log("DEBUG: Stripe PaymentIntent created successfully:", paymentIntent.id);
-
-            return NextResponse.json({
-                clientSecret: paymentIntent.client_secret,
-                orderId: order.id
-            });
-        } catch (stripeError: any) {
-            console.error("DEBUG: Stripe API call failed:", stripeError);
-            return NextResponse.json(
-                { error: `Stripe Error: ${stripeError.message}` },
-                { status: 400 }
-            );
-        }
+        // 2. Always use mock payment mode for testing
+        console.warn("Using mock payment mode for testing");
+        return NextResponse.json({
+            clientSecret: 'mock_client_secret_' + order.id,
+            orderId: order.id,
+            isMock: true
+        });
     } catch (error: any) {
         console.error('CRITICAL PAYMENT ERROR:', error);
         return NextResponse.json(
