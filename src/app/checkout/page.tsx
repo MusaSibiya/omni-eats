@@ -21,11 +21,31 @@ function MockCheckoutForm({ orderId, total }: { orderId: string | null, total: n
     const handleMockPayment = async () => {
         setIsProcessing(true);
         
-        // Simulate a payment delay
-        setTimeout(() => {
-            clearCart();
-            window.location.href = `/checkout/success?orderId=${orderId}`;
-        }, 1500);
+        try {
+            // Confirm the mock order via the existing API
+            const response = await fetch('/api/orders/confirm', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    paymentIntentId: 'mock_payment_intent',
+                    orderId: orderId 
+                }),
+            });
+            
+            if (response.ok) {
+                // Success! Clear cart and redirect
+                clearCart();
+                window.location.href = `/checkout/success?orderId=${orderId}&payment_intent=mock_payment_intent`;
+            } else {
+                const data = await response.json();
+                alert('Error confirming order: ' + (data.error || 'Unknown error'));
+                setIsProcessing(false);
+            }
+        } catch (err) {
+            console.error('Error processing mock payment:', err);
+            alert('Error processing payment. Please try again.');
+            setIsProcessing(false);
+        }
     };
 
     return (

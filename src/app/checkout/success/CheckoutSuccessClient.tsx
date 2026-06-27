@@ -23,7 +23,7 @@ export default function CheckoutSuccessClient() {
         if (urlOrderId) setOrderId(urlOrderId);
 
         if (paymentIntentId) {
-            // Confirm the order on the backend
+            // Confirm the order on the backend (real Stripe scenario)
             console.log('Calling /api/orders/confirm with:', { paymentIntentId });
 
             fetch('/api/orders/confirm', {
@@ -66,9 +66,14 @@ export default function CheckoutSuccessClient() {
                     console.error('Confirm API Network Error:', err);
                     setStatus('error');
                 });
+        } else if (urlOrderId) {
+            // Mock payment scenario - just mark the order as paid and confirmed!
+            console.log('Mock payment scenario, confirming order:', urlOrderId);
+            setStatus('success');
+            clearCart();
         } else {
-            // If no payment intent, redirect home
-            console.warn('No payment_intent in URL, redirecting...');
+            // If no payment intent or orderId, redirect home
+            console.warn('No payment_intent or orderId in URL, redirecting...');
             router.push('/');
         }
     }, [searchParams, clearCart, router]);
