@@ -14,6 +14,54 @@ import Link from 'next/link';
 // recreating the Stripe object on every render.
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
+function MockCheckoutForm({ orderId, total }: { orderId: string | null, total: number }) {
+    const [isProcessing, setIsProcessing] = useState(false);
+    const { clearCart } = useCart();
+
+    const handleMockPayment = async () => {
+        setIsProcessing(true);
+        
+        // Simulate a payment delay
+        setTimeout(() => {
+            clearCart();
+            window.location.href = `/checkout/success?orderId=${orderId}`;
+        }, 1500);
+    };
+
+    return (
+        <div className={styles.mockCheckout}>
+            <div className={styles.mockCard}>
+                <div className={styles.mockHeader}>
+                    <span className={styles.mockIcon}>💳</span>
+                    <h3 className={styles.mockTitle}>Test Payment (Demo Mode)</h3>
+                    <p className={styles.mockDescription}>No real payment will be charged</p>
+                </div>
+
+                <div className={styles.mockAmount}>
+                    <span className={styles.mockAmountLabel}>Total Amount</span>
+                    <span className={styles.mockAmountValue}>R {total.toFixed(2)}</span>
+                </div>
+
+                <button
+                    onClick={handleMockPayment} disabled={isProcessing} className={styles.mockButton}>
+                    {isProcessing ? (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <div className={styles.spinner}></div>
+                            <span>Processing...</span>
+                        </div>
+                    ) : (
+                        'Complete Order'
+                    )}
+                </button>
+
+                <div className={styles.mockNote}>
+                    This is a demo checkout for testing purposes only
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function CheckoutPage() {
     const [clientSecret, setClientSecret] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
@@ -21,6 +69,7 @@ export default function CheckoutPage() {
     const [restaurant, setRestaurant] = useState<any>(null);
     const [deliveryAddress, setDeliveryAddress] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const [isMockMode, setIsMockMode] = useState(false);
     const { items, cartTotal } = useCart();
 
     useEffect(() => {
@@ -54,6 +103,7 @@ export default function CheckoutPage() {
                     } else {
                         setClientSecret(data.clientSecret);
                         setOrderId(data.orderId);
+                        setIsMockMode(!!data.isMock);
                     }
                 })
                 .catch(err => {
@@ -177,6 +227,8 @@ export default function CheckoutPage() {
                             <div className={styles.spinner}></div>
                             <p>Preparing checkout...</p>
                         </div>
+                    ) : clientSecret && isMockMode ? (
+                        <MockCheckoutForm orderId={orderId} total={cartTotal} />
                     ) : clientSecret ? (
                         <Elements options={options} stripe={stripePromise}>     
                             <CheckoutForm orderId={orderId} />

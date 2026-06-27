@@ -297,3 +297,102 @@
     border-radius: 16px;
     border: 1px solid #ef4444;
 }
+
+/* Mock Checkout Styles */
+.mockCheckout {
+    width: 100%;
+}
+
+.mockCard {
+    background: var(--bg-primary);
+    border-radius: 16px;
+    padding: 32px 24px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.mockHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.mockIcon {
+    font-size: 3rem;
+}
+
+.mockTitle {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.mockDescription {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.mockAmount {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: rgba(255, 107, 53, 0.08);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 107, 53, 0.2);
+}
+
+.mockAmountLabel {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.mockAmountValue {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--accent-primary);
+}
+
+.mockButton {
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #ff6b35, #e55a2b);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mockButton:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.45);
+}
+
+.mockButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.mockButton:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.mockNote {
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    padding-top: 8px;
+}
