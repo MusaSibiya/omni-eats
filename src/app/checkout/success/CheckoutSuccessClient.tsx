@@ -22,8 +22,13 @@ export default function CheckoutSuccessClient() {
 
         if (urlOrderId) setOrderId(urlOrderId);
 
-        if (paymentIntentId) {
-            // Confirm the order on the backend (real Stripe scenario)
+        if (paymentIntentId === 'mock_payment_intent' && urlOrderId) {
+            // Mock payment scenario - we already confirmed in the checkout form!
+            console.log('Mock payment confirmed, showing success page');
+            setStatus('success');
+            clearCart();
+        } else if (paymentIntentId) {
+            // Real Stripe payment scenario
             console.log('Calling /api/orders/confirm with:', { paymentIntentId });
 
             fetch('/api/orders/confirm', {
@@ -67,8 +72,8 @@ export default function CheckoutSuccessClient() {
                     setStatus('error');
                 });
         } else if (urlOrderId) {
-            // Mock payment scenario - just mark the order as paid and confirmed!
-            console.log('Mock payment scenario, confirming order:', urlOrderId);
+            // Mock payment scenario without payment_intent
+            console.log('Mock payment scenario with just orderId:', urlOrderId);
             setStatus('success');
             clearCart();
         } else {
