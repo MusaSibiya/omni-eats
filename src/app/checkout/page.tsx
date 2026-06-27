@@ -103,7 +103,7 @@ export default function CheckoutPage() {
                     } else {
                         setClientSecret(data.clientSecret);
                         setOrderId(data.orderId);
-                        setIsMockMode(!!data.isMock);
+                        setIsMockMode(true); // Force mock mode for testing purposes
                     }
                 })
                 .catch(err => {
