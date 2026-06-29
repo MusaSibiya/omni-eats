@@ -10,9 +10,17 @@ export default function CheckoutSuccessClient() {
     const { clearCart } = useCart();
     const router = useRouter();
     const searchParams = useSearchParams();
-    const [status, setStatus] = useState('loading'); // loading, success, error 
+    
+    // Initialize state based on URL params immediately
+    const initialPaymentIntentId = searchParams.get('payment_intent');
+    const initialUrlOrderId = searchParams.get('orderId');
+    
+    // If mock payment or orderId exists, start with success to avoid flicker
+    const initialStatus = (initialPaymentIntentId === 'mock_payment_intent' || initialUrlOrderId) ? 'success' : 'loading';
+    
+    const [status, setStatus] = useState(initialStatus);
     const [errorDetails, setErrorDetails] = useState<string | null>(null);      
-    const [orderId, setOrderId] = useState<string | null>(null);
+    const [orderId, setOrderId] = useState<string | null>(initialUrlOrderId);
 
     useEffect(() => {
         const paymentIntentId = searchParams.get('payment_intent');
@@ -27,9 +35,10 @@ export default function CheckoutSuccessClient() {
             console.log('Mock payment confirmed, showing success page');
             setStatus('success');
             clearCart();
-        } else if (paymentIntentId) {
+        } else if (paymentIntentId && paymentIntentId !== 'mock_payment_intent') {
             // Real Stripe payment scenario
             console.log('Calling /api/orders/confirm with:', { paymentIntentId });
+            setStatus('loading');
 
             fetch('/api/orders/confirm', {
                 method: 'POST',
